@@ -3,309 +3,272 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>NOVA OS</title>
+<title>NovaOS</title>
 
 <style>
 *{
   box-sizing:border-box;
-  user-select:none;
+  -webkit-tap-highlight-color:transparent;
 }
 
 :root{
-  --accent:#7c6cff;
-  --accent2:#5ad7ff;
-  --bg:#080a0f;
-  --panel:rgba(18,21,30,.88);
-  --panel2:#11141c;
-  --border:rgba(255,255,255,.1);
-  --text:#f4f6fb;
-  --muted:#9299aa;
+  --accent:#007aff;
+  --glass:rgba(245,245,247,.72);
+  --glass-dark:rgba(30,30,32,.72);
+  --text:#111;
+  --muted:#777;
 }
 
 html,body{
-  margin:0;
   width:100%;
   height:100%;
+  margin:0;
   overflow:hidden;
-  font-family:Arial,"Noto Sans KR",sans-serif;
-  background:#080a0f;
-  color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display",
+    "Helvetica Neue","Noto Sans KR",Arial,sans-serif;
 }
 
-button,input,textarea{
-  font:inherit;
+body{
+  background:#111;
 }
 
-button{
-  color:inherit;
-  cursor:pointer;
-}
-
-/* DESKTOP */
+/* =========================
+   DESKTOP
+========================= */
 
 #desktop{
   position:fixed;
   inset:0;
   overflow:hidden;
+
   background:
-    radial-gradient(circle at 20% 10%,rgba(124,108,255,.28),transparent 35%),
-    radial-gradient(circle at 90% 80%,rgba(90,215,255,.13),transparent 30%),
-    linear-gradient(135deg,#080a10,#0b0d15 50%,#090b11);
+    radial-gradient(circle at 20% 15%,rgba(255,255,255,.35),transparent 25%),
+    radial-gradient(circle at 80% 20%,rgba(0,180,255,.35),transparent 30%),
+    radial-gradient(circle at 55% 80%,rgba(120,70,255,.3),transparent 35%),
+    linear-gradient(135deg,#173b66,#6c4e9c 50%,#0d7d96);
+
+  background-size:cover;
   transition:.5s;
 }
 
-#desktop.wallpaper2{
+#desktop.wall2{
   background:
-    radial-gradient(circle at 80% 20%,rgba(255,70,130,.2),transparent 30%),
-    radial-gradient(circle at 10% 90%,rgba(120,70,255,.2),transparent 35%),
-    linear-gradient(135deg,#120912,#080a14);
+    radial-gradient(circle at 70% 20%,#ff7b9d55,transparent 30%),
+    radial-gradient(circle at 20% 80%,#875eff55,transparent 35%),
+    linear-gradient(135deg,#130f2b,#492055,#091b35);
 }
 
-#desktop.wallpaper3{
+#desktop.wall3{
   background:
-    radial-gradient(circle at 50% 30%,rgba(0,220,255,.2),transparent 30%),
-    radial-gradient(circle at 10% 10%,rgba(0,120,255,.18),transparent 30%),
-    linear-gradient(135deg,#031018,#060b14);
+    radial-gradient(circle at 50% 20%,#00d9ff55,transparent 30%),
+    radial-gradient(circle at 20% 70%,#0066ff55,transparent 35%),
+    linear-gradient(135deg,#03121e,#064c67,#071426);
 }
 
-#desktop.wallpaper4{
+#desktop.wall4{
   background:
-    radial-gradient(circle at 50% 50%,rgba(255,180,70,.16),transparent 30%),
-    linear-gradient(135deg,#17100a,#080a0e);
+    radial-gradient(circle at 50% 20%,#ffb34755,transparent 30%),
+    radial-gradient(circle at 80% 80%,#ff4e4e33,transparent 35%),
+    linear-gradient(135deg,#21150c,#542b13,#090b10);
 }
 
-/* DESKTOP ICONS */
+/* =========================
+   MENU BAR
+========================= */
+
+.menu-bar{
+  position:absolute;
+  top:0;
+  left:0;
+  right:0;
+  height:34px;
+
+  display:flex;
+  align-items:center;
+
+  padding:0 13px;
+
+  background:rgba(20,20,22,.5);
+  backdrop-filter:blur(22px);
+  -webkit-backdrop-filter:blur(22px);
+
+  color:white;
+
+  z-index:10000;
+
+  font-size:13px;
+}
+
+.menu-left,
+.menu-right{
+  display:flex;
+  align-items:center;
+  gap:16px;
+}
+
+.menu-left{
+  flex:1;
+}
+
+.menu-item{
+  opacity:.92;
+  cursor:pointer;
+  white-space:nowrap;
+}
+
+.menu-item:hover{
+  opacity:1;
+}
+
+.nova-symbol{
+  font-weight:800;
+  font-size:15px;
+}
+
+.menu-title{
+  font-weight:700;
+}
+
+.menu-right{
+  gap:14px;
+  font-size:12px;
+}
+
+#liveTime{
+  font-variant-numeric:tabular-nums;
+}
+
+/* =========================
+   DESKTOP ICONS
+========================= */
 
 .desktop-icons{
   position:absolute;
-  top:22px;
-  left:22px;
-  display:grid;
-  grid-template-columns:repeat(2,90px);
-  gap:18px 12px;
+  top:55px;
+  right:22px;
+
+  display:flex;
+  flex-direction:column;
+  gap:18px;
+
+  width:90px;
+
+  z-index:10;
 }
 
 .desktop-icon{
   width:90px;
-  min-height:82px;
-  padding:8px 4px;
+  padding:7px 3px;
+
   border:1px solid transparent;
   border-radius:10px;
-  text-align:center;
+
   background:transparent;
+  color:white;
+
+  text-align:center;
+  cursor:pointer;
 }
 
 .desktop-icon:hover{
-  background:rgba(255,255,255,.08);
-  border-color:rgba(255,255,255,.08);
+  background:rgba(255,255,255,.16);
 }
 
-.icon-box{
-  width:44px;
-  height:44px;
+.desktop-icon .folder{
+  width:48px;
+  height:39px;
   margin:auto;
-  display:grid;
-  place-items:center;
-  border-radius:12px;
-  background:linear-gradient(145deg,rgba(124,108,255,.25),rgba(90,215,255,.08));
-  border:1px solid rgba(255,255,255,.1);
-  font-size:12px;
-  font-weight:900;
+
+  position:relative;
+
+  border-radius:6px;
+
+  background:linear-gradient(
+    180deg,
+    #66c7ff,
+    #1678df
+  );
+
+  box-shadow:
+    0 5px 15px rgba(0,0,0,.25);
+}
+
+.desktop-icon .folder:before{
+  content:"";
+  position:absolute;
+
+  top:-5px;
+  left:5px;
+
+  width:20px;
+  height:8px;
+
+  border-radius:5px 5px 0 0;
+
+  background:#65baff;
 }
 
 .desktop-icon span{
   display:block;
-  margin-top:8px;
+  margin-top:7px;
+
   font-size:11px;
-  color:#dce0e9;
+  line-height:14px;
+
+  text-shadow:0 1px 4px #000;
 }
 
-/* TASKBAR */
+/* =========================
+   WINDOWS
+========================= */
 
-.taskbar{
+#windows{
   position:absolute;
-  left:12px;
-  right:12px;
-  bottom:12px;
-  height:58px;
-  display:flex;
-  align-items:center;
-  gap:8px;
-  padding:8px;
-  border:1px solid rgba(255,255,255,.1);
-  border-radius:16px;
-  background:rgba(12,14,20,.82);
-  backdrop-filter:blur(20px);
-  box-shadow:0 15px 50px rgba(0,0,0,.4);
-  z-index:9000;
+  inset:34px 0 0 0;
+  pointer-events:none;
 }
-
-.start-button{
-  width:43px;
-  height:43px;
-  border:1px solid rgba(255,255,255,.08);
-  border-radius:11px;
-  background:rgba(255,255,255,.06);
-  display:grid;
-  place-items:center;
-  font-weight:900;
-  color:#aaa2ff;
-}
-
-.start-button:hover{
-  background:rgba(124,108,255,.18);
-}
-
-.task-apps{
-  display:flex;
-  gap:6px;
-  flex:1;
-  min-width:0;
-}
-
-.task-app{
-  width:40px;
-  height:40px;
-  border:1px solid transparent;
-  border-radius:10px;
-  background:transparent;
-  display:grid;
-  place-items:center;
-  font-size:11px;
-}
-
-.task-app:hover,
-.task-app.active{
-  background:rgba(255,255,255,.08);
-  border-color:var(--border);
-}
-
-.clock{
-  min-width:85px;
-  padding:0 9px;
-  text-align:center;
-  font-size:11px;
-  color:#cbd0db;
-}
-
-/* START MENU */
-
-.start-menu{
-  position:absolute;
-  left:12px;
-  bottom:82px;
-  width:340px;
-  max-width:calc(100vw - 24px);
-  padding:15px;
-  border:1px solid rgba(255,255,255,.1);
-  border-radius:17px;
-  background:rgba(14,17,24,.94);
-  backdrop-filter:blur(25px);
-  box-shadow:0 25px 80px rgba(0,0,0,.55);
-  z-index:9500;
-  display:none;
-}
-
-.start-menu.open{
-  display:block;
-  animation:menuIn .16s ease;
-}
-
-@keyframes menuIn{
-  from{transform:translateY(8px);opacity:0}
-  to{transform:translateY(0);opacity:1}
-}
-
-.start-top{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  padding:7px 5px 16px;
-}
-
-.user-avatar{
-  width:35px;
-  height:35px;
-  display:grid;
-  place-items:center;
-  border-radius:50%;
-  background:linear-gradient(135deg,var(--accent),var(--accent2));
-  color:white;
-  font-size:11px;
-  font-weight:bold;
-}
-
-.start-title{
-  font-size:13px;
-  font-weight:bold;
-}
-
-.start-sub{
-  margin-top:3px;
-  color:var(--muted);
-  font-size:10px;
-}
-
-.app-list{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:6px;
-}
-
-.start-app{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  padding:11px;
-  border:1px solid transparent;
-  border-radius:10px;
-  background:rgba(255,255,255,.035);
-  text-align:left;
-}
-
-.start-app:hover{
-  background:rgba(124,108,255,.12);
-  border-color:rgba(124,108,255,.2);
-}
-
-.start-app-icon{
-  width:31px;
-  height:31px;
-  display:grid;
-  place-items:center;
-  border-radius:8px;
-  background:rgba(255,255,255,.07);
-  font-size:9px;
-  font-weight:bold;
-}
-
-.start-app b{
-  display:block;
-  font-size:11px;
-}
-
-.start-app small{
-  display:block;
-  margin-top:2px;
-  color:var(--muted);
-  font-size:9px;
-}
-
-/* WINDOWS */
 
 .window{
   position:absolute;
-  width:650px;
-  height:460px;
+
+  width:700px;
+  height:470px;
+
   min-width:300px;
-  min-height:220px;
+  min-height:230px;
+
   overflow:hidden;
-  border:1px solid rgba(255,255,255,.13);
-  border-radius:15px;
-  background:rgba(13,16,23,.94);
-  backdrop-filter:blur(25px);
-  box-shadow:0 30px 100px rgba(0,0,0,.55);
-  z-index:100;
+
+  border-radius:13px;
+
+  background:rgba(245,245,247,.91);
+
+  color:#111;
+
+  box-shadow:
+    0 30px 80px rgba(0,0,0,.35),
+    0 2px 8px rgba(0,0,0,.15);
+
+  border:1px solid rgba(255,255,255,.55);
+
+  backdrop-filter:blur(30px);
+  -webkit-backdrop-filter:blur(30px);
+
+  pointer-events:auto;
+
+  animation:windowOpen .18s ease;
+}
+
+@keyframes windowOpen{
+  from{
+    opacity:0;
+    transform:scale(.97);
+  }
+
+  to{
+    opacity:1;
+    transform:scale(1);
+  }
 }
 
 .window.hidden{
@@ -313,20 +276,25 @@ button{
 }
 
 .window.maximized{
-  left:12px!important;
-  top:12px!important;
-  width:calc(100% - 24px)!important;
-  height:calc(100% - 82px)!important;
+  left:8px!important;
+  top:8px!important;
+
+  width:calc(100% - 16px)!important;
+  height:calc(100% - 92px)!important;
 }
 
 .titlebar{
   height:43px;
+
   display:flex;
   align-items:center;
-  justify-content:space-between;
-  padding:0 8px 0 14px;
-  border-bottom:1px solid var(--border);
-  background:rgba(255,255,255,.025);
+
+  padding:0 10px;
+
+  background:rgba(245,245,247,.82);
+
+  border-bottom:1px solid rgba(0,0,0,.08);
+
   cursor:grab;
 }
 
@@ -334,326 +302,561 @@ button{
   cursor:grabbing;
 }
 
-.title{
+.traffic{
   display:flex;
-  align-items:center;
-  gap:8px;
-  font-size:12px;
-  font-weight:bold;
+  gap:7px;
+
+  width:72px;
 }
 
-.title-symbol{
-  color:#aaa2ff;
-  font-size:9px;
-}
+.traffic button{
+  width:12px;
+  height:12px;
 
-.window-buttons{
-  display:flex;
-  gap:4px;
-}
+  border-radius:50%;
 
-.window-buttons button{
-  width:30px;
-  height:28px;
   border:0;
-  border-radius:7px;
-  background:transparent;
-  color:#9da4b3;
+
+  padding:0;
+
+  cursor:pointer;
 }
 
-.window-buttons button:hover{
-  background:rgba(255,255,255,.08);
+.close-btn{
+  background:#ff5f57;
 }
 
-.window-buttons .close:hover{
-  background:#b94055;
-  color:white;
+.min-btn{
+  background:#febc2e;
+}
+
+.max-btn{
+  background:#28c840;
+}
+
+.window-title{
+  flex:1;
+
+  text-align:center;
+
+  font-size:12px;
+  font-weight:600;
+
+  color:#333;
+}
+
+.window-spacer{
+  width:72px;
 }
 
 .window-content{
+  width:100%;
   height:calc(100% - 43px);
+
   overflow:auto;
 }
 
-/* COMMON APP */
+/* =========================
+   FINDER
+========================= */
 
-.app-padding{
-  padding:20px;
-}
+.finder{
+  height:100%;
 
-.app-heading{
-  margin:0 0 5px;
-  font-size:18px;
-}
-
-.app-description{
-  margin:0 0 20px;
-  color:var(--muted);
-  font-size:11px;
-}
-
-/* EXPLORER */
-
-.path-bar{
   display:flex;
-  gap:7px;
-  margin-bottom:15px;
+
+  background:#f5f5f7;
 }
 
-.path{
-  flex:1;
-  padding:10px 12px;
-  border:1px solid var(--border);
-  border-radius:8px;
-  background:#090b10;
-  color:#8f97a8;
+.sidebar{
+  width:165px;
+
+  padding:18px 10px;
+
+  background:rgba(235,235,240,.7);
+
+  border-right:1px solid rgba(0,0,0,.08);
+}
+
+.sidebar-title{
+  padding:0 10px 9px;
+
   font-size:11px;
+  color:#777;
+  font-weight:600;
 }
 
-.file-grid{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
+.side-btn{
+  width:100%;
+
+  padding:8px 10px;
+
+  display:flex;
+  align-items:center;
   gap:8px;
+
+  border:0;
+  border-radius:7px;
+
+  background:transparent;
+
+  font-size:11px;
+  text-align:left;
+}
+
+.side-btn:hover,
+.side-btn.active{
+  background:rgba(0,122,255,.12);
+  color:#006bd6;
+}
+
+.finder-main{
+  flex:1;
+  padding:22px;
+
+  overflow:auto;
+}
+
+.finder-toolbar{
+  display:flex;
+  align-items:center;
+  gap:8px;
+
+  margin-bottom:20px;
+}
+
+.back{
+  width:30px;
+  height:27px;
+
+  border:0;
+  border-radius:7px;
+
+  background:#e5e5e9;
+
+  font-size:15px;
+}
+
+.finder-path{
+  font-size:13px;
+  font-weight:600;
+}
+
+.files{
+  display:grid;
+
+  grid-template-columns:
+    repeat(auto-fill,minmax(105px,1fr));
+
+  gap:12px;
 }
 
 .file{
-  min-height:95px;
-  padding:14px 8px;
-  border:1px solid var(--border);
+  padding:15px 8px;
+
   border-radius:10px;
-  background:rgba(255,255,255,.025);
+
   text-align:center;
+
+  cursor:pointer;
 }
 
 .file:hover{
-  background:rgba(124,108,255,.1);
+  background:rgba(0,122,255,.1);
 }
 
 .file-icon{
-  width:35px;
-  height:35px;
+  width:50px;
+  height:42px;
+
   margin:auto;
+
+  border-radius:7px;
+
   display:grid;
   place-items:center;
-  border-radius:9px;
-  background:rgba(124,108,255,.1);
-  color:#aaa2ff;
-  font-size:9px;
-  font-weight:bold;
-}
 
-.file b{
-  display:block;
-  margin-top:8px;
-  font-size:10px;
-}
-
-.file small{
-  color:var(--muted);
   font-size:8px;
+  font-weight:700;
+
+  color:white;
+
+  background:linear-gradient(
+    180deg,
+    #6fcaff,
+    #1678dc
+  );
+
+  box-shadow:
+    0 5px 12px rgba(0,0,0,.15);
 }
 
-/* NOTES */
+.file-icon.doc{
+  background:linear-gradient(
+    180deg,
+    #8e8e93,
+    #4b4b50
+  );
+}
 
-.notes{
-  width:100%;
+.file-icon.app{
+  border-radius:11px;
+
+  background:linear-gradient(
+    135deg,
+    #7b68ee,
+    #007aff
+  );
+}
+
+.file-name{
+  margin-top:7px;
+
+  font-size:10px;
+  color:#333;
+}
+
+/* =========================
+   NOTES
+========================= */
+
+.notes-app{
   height:100%;
-  padding:18px;
+
   display:flex;
   flex-direction:column;
+
+  padding:15px;
+
+  background:#fff;
 }
 
-.notes textarea{
-  flex:1;
-  width:100%;
-  resize:none;
-  outline:none;
-  border:1px solid var(--border);
-  border-radius:10px;
-  padding:15px;
-  background:#090b10;
-  color:#e9ecf2;
-  line-height:1.7;
+.notes-toolbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+
+  padding-bottom:10px;
+}
+
+.notes-toolbar b{
   font-size:13px;
 }
 
-.notes-bottom{
-  display:flex;
-  justify-content:space-between;
-  margin-top:8px;
-  color:var(--muted);
-  font-size:9px;
+.notes-status{
+  color:#888;
+  font-size:10px;
 }
 
-/* CALCULATOR */
+#notesArea{
+  flex:1;
 
-.calc{
-  max-width:350px;
+  width:100%;
+
+  resize:none;
+
+  outline:none;
+  border:0;
+
+  padding:15px;
+
+  border-radius:9px;
+
+  background:#f5f5f7;
+
+  font-family:inherit;
+
+  font-size:14px;
+
+  line-height:1.8;
+
+  color:#222;
+}
+
+/* =========================
+   CALCULATOR
+========================= */
+
+.calculator{
+  width:330px;
+  max-width:100%;
+
   margin:auto;
   padding:25px;
 }
 
 .calc-display{
   height:70px;
-  padding:17px;
+
+  display:flex;
+  align-items:flex-end;
+  justify-content:flex-end;
+
   overflow:hidden;
-  border:1px solid var(--border);
-  border-radius:11px;
-  background:#080a0e;
-  text-align:right;
-  font-size:27px;
-  font-weight:bold;
-  margin-bottom:10px;
+
+  padding:0 12px 10px;
+
+  font-size:38px;
+  font-weight:300;
+
+  font-variant-numeric:tabular-nums;
+
+  color:#111;
 }
 
 .calc-grid{
   display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:6px;
+
+  grid-template-columns:
+    repeat(4,1fr);
+
+  gap:7px;
 }
 
 .calc-grid button{
-  height:53px;
-  border:1px solid var(--border);
-  border-radius:9px;
-  background:rgba(255,255,255,.045);
-  font-size:13px;
+  height:55px;
+
+  border:0;
+  border-radius:50%;
+
+  background:#e5e5e7;
+
+  font-size:17px;
+
+  cursor:pointer;
 }
 
 .calc-grid button:hover{
-  background:rgba(124,108,255,.16);
+  filter:brightness(.94);
 }
 
 .calc-grid .operator{
-  color:#aaa2ff;
+  background:#ff9500;
+  color:white;
 }
 
-/* TERMINAL */
+.calc-grid .special{
+  background:#d4d4d6;
+}
+
+/* =========================
+   TERMINAL
+========================= */
 
 .terminal{
   height:100%;
+
+  background:#101012;
+
+  color:#e9e9ed;
+
   padding:18px;
-  background:#07090d;
-  color:#b8c2d4;
-  font-family:Consolas,monospace;
+
+  font-family:
+    SFMono-Regular,
+    Consolas,
+    monospace;
+
   font-size:12px;
+
   overflow:auto;
 }
 
 .terminal-output{
   white-space:pre-wrap;
-  line-height:1.6;
+  line-height:1.65;
 }
 
-.terminal-line{
+.terminal-input-row{
   display:flex;
-  gap:7px;
+  gap:8px;
   margin-top:5px;
 }
 
-.terminal-line span{
-  color:#7f75ff;
+.terminal-prompt{
+  color:#35d07f;
 }
 
-.terminal-line input{
+#terminalInput{
   flex:1;
+
   border:0;
   outline:0;
+
   background:transparent;
+
   color:white;
+
   font-family:inherit;
 }
 
-/* BROWSER */
+/* =========================
+   BROWSER
+========================= */
 
 .browser{
   height:100%;
+
   display:flex;
   flex-direction:column;
+
+  background:#fff;
 }
 
-.browser-bar{
+.browser-toolbar{
   display:flex;
-  gap:7px;
-  padding:10px;
-  border-bottom:1px solid var(--border);
+  align-items:center;
+  gap:8px;
+
+  padding:9px;
+
+  background:#e8e8eb;
+
+  border-bottom:1px solid #d0d0d3;
 }
 
-.browser-bar input{
+.browser-circle{
+  width:25px;
+  height:25px;
+
+  display:grid;
+  place-items:center;
+
+  border:0;
+  border-radius:50%;
+
+  background:#d0d0d3;
+
+  font-size:12px;
+}
+
+.address{
   flex:1;
-  padding:9px 11px;
-  outline:none;
-  border:1px solid var(--border);
-  border-radius:8px;
-  background:#090b10;
-  color:white;
-  font-size:11px;
-}
 
-.browser-bar button{
-  border:1px solid var(--border);
-  border-radius:8px;
-  background:rgba(255,255,255,.05);
-  padding:0 13px;
+  height:29px;
+
+  padding:0 12px;
+
+  border:0;
+  outline:0;
+
+  border-radius:7px;
+
+  background:#fff;
+
+  font-size:11px;
 }
 
 .browser-page{
   flex:1;
-  padding:35px;
+
   overflow:auto;
+
+  padding:45px;
+
+  background:
+    radial-gradient(
+      circle at 50% 0%,
+      #007aff12,
+      transparent 40%
+    ),
+    #fff;
 }
 
 .browser-logo{
-  font-size:30px;
-  font-weight:900;
+  font-size:37px;
+  font-weight:800;
   letter-spacing:-2px;
 }
 
 .browser-logo span{
-  color:#8e83ff;
+  color:#007aff;
 }
 
-.search-result{
-  margin-top:25px;
-  padding:15px;
-  border:1px solid var(--border);
-  border-radius:10px;
-  background:rgba(255,255,255,.025);
+.browser-card{
+  margin-top:30px;
+
+  padding:18px;
+
+  border-radius:12px;
+
+  background:#f5f5f7;
+
+  border:1px solid #e5e5e7;
 }
 
-.search-result b{
+.browser-card b{
   font-size:13px;
 }
 
-.search-result p{
-  color:var(--muted);
+.browser-card p{
+  color:#777;
+
   font-size:11px;
-  line-height:1.6;
+
+  line-height:1.7;
 }
 
-/* SETTINGS */
+/* =========================
+   SETTINGS
+========================= */
 
 .settings{
-  padding:20px;
+  padding:25px;
+
+  background:#f5f5f7;
+
+  min-height:100%;
+}
+
+.settings h2{
+  margin:0 0 18px;
+
+  font-size:22px;
+}
+
+.setting-card{
+  max-width:600px;
+
+  border-radius:12px;
+
+  overflow:hidden;
+
+  background:white;
+
+  border:1px solid #ddd;
 }
 
 .setting-row{
+  min-height:65px;
+
   display:flex;
   align-items:center;
   justify-content:space-between;
-  padding:15px 0;
-  border-bottom:1px solid var(--border);
+
+  padding:12px 17px;
+
+  border-bottom:1px solid #eee;
+}
+
+.setting-row:last-child{
+  border-bottom:0;
 }
 
 .setting-row b{
+  display:block;
+
   font-size:12px;
 }
 
 .setting-row small{
   display:block;
-  color:var(--muted);
+
   margin-top:4px;
-  font-size:9px;
+
+  color:#888;
+
+  font-size:10px;
 }
 
 .wallpapers{
@@ -662,71 +865,295 @@ button{
 }
 
 .wall{
-  width:38px;
-  height:30px;
+  width:42px;
+  height:32px;
+
   border:2px solid transparent;
   border-radius:7px;
+
+  cursor:pointer;
 }
 
 .wall:hover{
-  border-color:white;
+  border-color:#007aff;
 }
 
-.wall.one{
-  background:linear-gradient(135deg,#171334,#08798c);
+.wall.a{
+  background:linear-gradient(135deg,#173b66,#6c4e9c,#0d7d96);
 }
 
-.wall.two{
-  background:linear-gradient(135deg,#2b071b,#170b38);
+.wall.b{
+  background:linear-gradient(135deg,#130f2b,#492055,#091b35);
 }
 
-.wall.three{
-  background:linear-gradient(135deg,#032331,#04115e);
+.wall.c{
+  background:linear-gradient(135deg,#03121e,#064c67,#071426);
 }
 
-.wall.four{
-  background:linear-gradient(135deg,#2b1807,#090909);
+.wall.d{
+  background:linear-gradient(135deg,#21150c,#542b13,#090b10);
 }
 
-/* ABOUT */
+#accentPicker{
+  width:40px;
+  height:30px;
 
-.about{
-  padding:35px;
+  border:0;
+  padding:0;
+
+  background:none;
+}
+
+/* =========================
+   LAUNCHPAD
+========================= */
+
+.launchpad{
+  position:absolute;
+
+  inset:34px 0 0 0;
+
+  z-index:8000;
+
+  display:none;
+
+  padding:60px 30px;
+
+  background:
+    rgba(30,30,40,.58);
+
+  backdrop-filter:blur(30px);
+  -webkit-backdrop-filter:blur(30px);
+
+  animation:launch .2s ease;
+}
+
+.launchpad.open{
+  display:block;
+}
+
+@keyframes launch{
+  from{
+    opacity:0;
+    transform:scale(1.02);
+  }
+
+  to{
+    opacity:1;
+    transform:scale(1);
+  }
+}
+
+.launch-title{
   text-align:center;
+
+  margin-bottom:35px;
+
+  color:white;
+
+  font-size:22px;
+  font-weight:700;
 }
 
-.nova-logo{
-  width:80px;
-  height:80px;
+.launch-grid{
+  max-width:650px;
+
   margin:auto;
+
+  display:grid;
+
+  grid-template-columns:
+    repeat(4,1fr);
+
+  gap:30px;
+}
+
+.launch-app{
+  border:0;
+  background:none;
+
+  color:white;
+
+  text-align:center;
+
+  cursor:pointer;
+}
+
+.launch-icon{
+  width:68px;
+  height:68px;
+
+  margin:auto;
+
   display:grid;
   place-items:center;
-  border-radius:22px;
-  background:linear-gradient(135deg,var(--accent),var(--accent2));
-  box-shadow:0 15px 50px rgba(124,108,255,.3);
-  font-weight:900;
-  font-size:18px;
+
+  border-radius:17px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255,255,255,.8),
+      rgba(255,255,255,.3)
+    );
+
+  color:#333;
+
+  font-size:10px;
+  font-weight:800;
+
+  box-shadow:
+    0 10px 30px rgba(0,0,0,.25);
+
+  transition:.15s;
 }
 
-.about h2{
-  margin:18px 0 7px;
+.launch-app:hover .launch-icon{
+  transform:scale(1.08);
 }
 
-.about p{
-  color:var(--muted);
+.launch-app span{
+  display:block;
+
+  margin-top:9px;
+
   font-size:11px;
-  line-height:1.7;
+
+  text-shadow:0 2px 5px #000;
 }
 
-/* MOBILE */
+/* =========================
+   DOCK
+========================= */
+
+.dock-wrap{
+  position:absolute;
+
+  left:50%;
+  bottom:12px;
+
+  transform:translateX(-50%);
+
+  z-index:9000;
+}
+
+.dock{
+  display:flex;
+  align-items:flex-end;
+
+  gap:8px;
+
+  padding:8px 10px;
+
+  border-radius:20px;
+
+  background:rgba(245,245,247,.43);
+
+  border:1px solid rgba(255,255,255,.45);
+
+  backdrop-filter:blur(25px);
+  -webkit-backdrop-filter:blur(25px);
+
+  box-shadow:
+    0 15px 45px rgba(0,0,0,.25);
+}
+
+.dock-app{
+  width:52px;
+  height:52px;
+
+  display:grid;
+  place-items:center;
+
+  border:0;
+  border-radius:14px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255,255,255,.9),
+      rgba(220,220,225,.65)
+    );
+
+  color:#222;
+
+  font-size:9px;
+  font-weight:800;
+
+  cursor:pointer;
+
+  box-shadow:
+    0 4px 10px rgba(0,0,0,.15);
+
+  transition:
+    transform .14s,
+    margin .14s;
+}
+
+.dock-app:hover{
+  transform:
+    translateY(-10px)
+    scale(1.18);
+  margin:0 5px;
+}
+
+.dock-app.blue{
+  background:linear-gradient(135deg,#63c5ff,#007aff);
+  color:white;
+}
+
+.dock-app.green{
+  background:linear-gradient(135deg,#5ee890,#16a85a);
+  color:white;
+}
+
+.dock-app.purple{
+  background:linear-gradient(135deg,#b083ff,#6c4cff);
+  color:white;
+}
+
+.dock-app.dark{
+  background:linear-gradient(135deg,#45454a,#111114);
+  color:white;
+}
+
+.dock-separator{
+  width:1px;
+  height:40px;
+
+  background:rgba(255,255,255,.5);
+
+  margin:0 2px;
+}
+
+/* =========================
+   MOBILE
+========================= */
 
 @media(max-width:700px){
 
+  .menu-left .hide-mobile{
+    display:none;
+  }
+
+  .menu-right{
+    gap:8px;
+  }
+
+  .menu-right .hide-mobile{
+    display:none;
+  }
+
   .desktop-icons{
-    grid-template-columns:repeat(3,70px);
-    gap:12px 5px;
-    left:10px;
-    top:12px;
+    left:12px;
+    right:auto;
+
+    flex-direction:row;
+    flex-wrap:wrap;
+
+    width:250px;
+
+    gap:12px;
   }
 
   .desktop-icon{
@@ -735,132 +1162,234 @@ button{
 
   .window{
     left:7px!important;
-    top:7px!important;
+    top:42px!important;
+
     width:calc(100% - 14px)!important;
-    height:calc(100% - 82px)!important;
-    border-radius:13px;
+    height:calc(100% - 115px)!important;
+
+    min-width:0;
   }
 
-  .file-grid{
-    grid-template-columns:repeat(3,1fr);
-  }
-
-  .start-menu{
-    width:calc(100vw - 24px);
-  }
-
-  .taskbar{
-    left:7px;
-    right:7px;
-    bottom:7px;
-  }
-
-  .clock{
-    min-width:60px;
-  }
-
-  .task-app:nth-child(n+4){
+  .sidebar{
     display:none;
+  }
+
+  .finder-main{
+    padding:15px;
+  }
+
+  .launch-grid{
+    grid-template-columns:
+      repeat(3,1fr);
+
+    gap:25px 10px;
+  }
+
+  .dock{
+    max-width:
+      calc(100vw - 14px);
+
+    overflow-x:auto;
+  }
+
+  .dock-app{
+    flex:none;
+
+    width:46px;
+    height:46px;
+  }
+
+  .browser-page{
+    padding:25px;
   }
 }
 </style>
 </head>
 
-
 <body>
 
 <div id="desktop">
 
-  <!-- DESKTOP ICONS -->
+  <!-- =====================
+       MENU BAR
+  ====================== -->
 
-  <div class="desktop-icons">
+  <div class="menu-bar">
 
-    <button class="desktop-icon" ondblclick="openApp('explorer')">
-      <div class="icon-box">FILES</div>
-      <span>내 파일</span>
-    </button>
+    <div class="menu-left">
 
-    <button class="desktop-icon" ondblclick="openApp('notes')">
-      <div class="icon-box">NOTE</div>
-      <span>메모장</span>
-    </button>
+      <div class="menu-item nova-symbol">
+        N
+      </div>
 
-    <button class="desktop-icon" ondblclick="openApp('browser')">
-      <div class="icon-box">WEB</div>
-      <span>NOVA 브라우저</span>
-    </button>
+      <div
+        class="menu-item menu-title"
+        onclick="openAbout()"
+      >
+        NovaOS
+      </div>
 
-    <button class="desktop-icon" ondblclick="openApp('about')">
-      <div class="icon-box">NOVA</div>
-      <span>NOVA OS</span>
-    </button>
+      <div
+        class="menu-item hide-mobile"
+        onclick="openFinder()"
+      >
+        파일
+      </div>
 
-  </div>
+      <div
+        class="menu-item hide-mobile"
+        onclick="openNotes()"
+      >
+        편집
+      </div>
 
-
-  <!-- START MENU -->
-
-  <div class="start-menu" id="startMenu">
-
-    <div class="start-top">
-
-      <div class="user-avatar">N</div>
-
-      <div>
-        <div class="start-title">NOVA USER</div>
-        <div class="start-sub">Welcome to NOVA OS</div>
+      <div
+        class="menu-item hide-mobile"
+        onclick="openSettings()"
+      >
+        보기
       </div>
 
     </div>
 
-    <div class="app-list">
+    <div class="menu-right">
 
-      <button class="start-app" onclick="openApp('explorer')">
-        <div class="start-app-icon">FILES</div>
-        <div>
-          <b>파일 탐색기</b>
-          <small>내 파일 보기</small>
+      <div class="menu-item hide-mobile">
+        Wi-Fi
+      </div>
+
+      <div class="menu-item">
+        배터리 100%
+      </div>
+
+      <div
+        id="liveTime"
+        class="menu-item"
+      >
+        00:00
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- =====================
+       DESKTOP ICONS
+  ====================== -->
+
+  <div class="desktop-icons">
+
+    <button
+      class="desktop-icon"
+      ondblclick="openFinder()"
+    >
+      <div class="folder"></div>
+      <span>파일</span>
+    </button>
+
+    <button
+      class="desktop-icon"
+      ondblclick="openNotes()"
+    >
+      <div class="folder"></div>
+      <span>문서</span>
+    </button>
+
+  </div>
+
+
+  <!-- =====================
+       WINDOWS
+  ====================== -->
+
+  <div id="windows"></div>
+
+
+  <!-- =====================
+       LAUNCHPAD
+  ====================== -->
+
+  <div
+    id="launchpad"
+    class="launchpad"
+    onclick="launchBackground(event)"
+  >
+
+    <div class="launch-title">
+      앱
+    </div>
+
+    <div class="launch-grid">
+
+      <button
+        class="launch-app"
+        onclick="openFinder()"
+      >
+        <div class="launch-icon">
+          FINDER
         </div>
+        <span>파일</span>
       </button>
 
-      <button class="start-app" onclick="openApp('notes')">
-        <div class="start-app-icon">NOTE</div>
-        <div>
-          <b>메모장</b>
-          <small>텍스트 작성</small>
+      <button
+        class="launch-app"
+        onclick="openNotes()"
+      >
+        <div class="launch-icon">
+          NOTE
         </div>
+        <span>메모</span>
       </button>
 
-      <button class="start-app" onclick="openApp('calculator')">
-        <div class="start-app-icon">CALC</div>
-        <div>
-          <b>계산기</b>
-          <small>빠른 계산</small>
+      <button
+        class="launch-app"
+        onclick="openCalculator()"
+      >
+        <div class="launch-icon">
+          CALC
         </div>
+        <span>계산기</span>
       </button>
 
-      <button class="start-app" onclick="openApp('terminal')">
-        <div class="start-app-icon">TERM</div>
-        <div>
-          <b>터미널</b>
-          <small>명령어 실행</small>
+      <button
+        class="launch-app"
+        onclick="openTerminal()"
+      >
+        <div class="launch-icon">
+          TERM
         </div>
+        <span>터미널</span>
       </button>
 
-      <button class="start-app" onclick="openApp('browser')">
-        <div class="start-app-icon">WEB</div>
-        <div>
-          <b>브라우저</b>
-          <small>인터넷 느낌</small>
+      <button
+        class="launch-app"
+        onclick="openBrowser()"
+      >
+        <div class="launch-icon">
+          WEB
         </div>
+        <span>브라우저</span>
       </button>
 
-      <button class="start-app" onclick="openApp('settings')">
-        <div class="start-app-icon">SET</div>
-        <div>
-          <b>설정</b>
-          <small>OS 설정</small>
+      <button
+        class="launch-app"
+        onclick="openSettings()"
+      >
+        <div class="launch-icon">
+          SET
         </div>
+        <span>설정</span>
+      </button>
+
+      <button
+        class="launch-app"
+        onclick="openAbout()"
+      >
+        <div class="launch-icon">
+          NOVA
+        </div>
+        <span>NovaOS</span>
       </button>
 
     </div>
@@ -868,24 +1397,72 @@ button{
   </div>
 
 
-  <!-- WINDOWS CONTAINER -->
+  <!-- =====================
+       DOCK
+  ====================== -->
 
-  <div id="windows"></div>
+  <div class="dock-wrap">
 
+    <div class="dock">
 
-  <!-- TASKBAR -->
+      <button
+        class="dock-app blue"
+        onclick="toggleLaunchpad()"
+        title="Launchpad"
+      >
+        APPS
+      </button>
 
-  <div class="taskbar">
+      <button
+        class="dock-app"
+        onclick="openFinder()"
+        title="Finder"
+      >
+        FINDER
+      </button>
 
-    <button class="start-button" onclick="toggleStart()">
-      N
-    </button>
+      <button
+        class="dock-app blue"
+        onclick="openBrowser()"
+        title="Browser"
+      >
+        WEB
+      </button>
 
-    <div class="task-apps" id="taskApps"></div>
+      <button
+        class="dock-app green"
+        onclick="openNotes()"
+        title="Notes"
+      >
+        NOTE
+      </button>
 
-    <div class="clock">
-      <div id="time">00:00</div>
-      <div id="date">0000.00.00</div>
+      <button
+        class="dock-app purple"
+        onclick="openCalculator()"
+        title="Calculator"
+      >
+        CALC
+      </button>
+
+      <button
+        class="dock-app dark"
+        onclick="openTerminal()"
+        title="Terminal"
+      >
+        TERM
+      </button>
+
+      <div class="dock-separator"></div>
+
+      <button
+        class="dock-app"
+        onclick="openSettings()"
+        title="Settings"
+      >
+        SET
+      </button>
+
     </div>
 
   </div>
@@ -895,27 +1472,37 @@ button{
 
 <script>
 
-/* ==========================
-   STORAGE
-========================== */
+/* =====================================================
+   NOVA OS
+===================================================== */
 
-const storageKey="novaOS";
+const windows={};
+
+let zIndex=100;
+let windowOffset=0;
+
+
+/* =====================================================
+   STORAGE
+===================================================== */
 
 let saved={};
 
 try{
-  saved=JSON.parse(
-    localStorage.getItem(storageKey)||"{}"
-  );
+  saved=
+    JSON.parse(
+      localStorage.getItem("novaOSData") || "{}"
+    );
 }catch(e){
   saved={};
 }
 
-function saveData(){
+
+function save(){
 
   try{
     localStorage.setItem(
-      storageKey,
+      "novaOSData",
       JSON.stringify(saved)
     );
   }catch(e){}
@@ -923,123 +1510,94 @@ function saveData(){
 }
 
 
-/* ==========================
-   CLOCK
-========================== */
+/* =====================================================
+   REAL-TIME KOREA TIME
+===================================================== */
 
-function updateClock(){
+function updateRealTime(){
 
   const now=new Date();
 
-  const hh=
-    String(now.getHours()).padStart(2,"0");
+  const time=
+    new Intl.DateTimeFormat(
+      "ko-KR",
+      {
+        timeZone:"Asia/Seoul",
+        hour:"2-digit",
+        minute:"2-digit",
+        second:"2-digit",
+        hour12:false
+      }
+    ).format(now);
 
-  const mm=
-    String(now.getMinutes()).padStart(2,"0");
+  const date=
+    new Intl.DateTimeFormat(
+      "ko-KR",
+      {
+        timeZone:"Asia/Seoul",
+        month:"numeric",
+        day:"numeric",
+        weekday:"short"
+      }
+    ).format(now);
 
-  const yyyy=
-    now.getFullYear();
-
-  const mo=
-    String(now.getMonth()+1).padStart(2,"0");
-
-  const dd=
-    String(now.getDate()).padStart(2,"0");
-
-  document.getElementById("time")
-    .textContent=`${hh}:${mm}`;
-
-  document.getElementById("date")
-    .textContent=`${yyyy}.${mo}.${dd}`;
-
-}
-
-updateClock();
-
-setInterval(updateClock,1000);
-
-
-/* ==========================
-   START MENU
-========================== */
-
-function toggleStart(){
-
-  document
-    .getElementById("startMenu")
-    .classList.toggle("open");
+  document.getElementById(
+    "liveTime"
+  ).textContent=
+    date+" "+time;
 
 }
 
-document.addEventListener("click",function(e){
+updateRealTime();
 
-  const menu=
-    document.getElementById("startMenu");
-
-  const button=
-    document.querySelector(".start-button");
-
-  if(
-    menu.classList.contains("open") &&
-    !menu.contains(e.target) &&
-    !button.contains(e.target)
-  ){
-    menu.classList.remove("open");
-  }
-
-});
+setInterval(
+  updateRealTime,
+  1000
+);
 
 
-/* ==========================
-   APP SYSTEM
-========================== */
+/* =====================================================
+   APP OPENING
+===================================================== */
 
-const apps={
-  explorer:{
-    title:"파일 탐색기",
-    symbol:"FILES"
-  },
-  notes:{
-    title:"메모장",
-    symbol:"NOTE"
-  },
-  calculator:{
-    title:"계산기",
-    symbol:"CALC"
-  },
-  terminal:{
-    title:"터미널",
-    symbol:"TERM"
-  },
-  browser:{
-    title:"NOVA 브라우저",
-    symbol:"WEB"
-  },
-  settings:{
-    title:"설정",
-    symbol:"SET"
-  },
-  about:{
-    title:"NOVA OS",
-    symbol:"NOVA"
-  }
-};
+function openFinder(){
+  openApp("finder","Finder");
+}
 
-let zIndex=100;
-let windowCount=0;
+function openNotes(){
+  openApp("notes","메모");
+}
 
-const openWindows={};
+function openCalculator(){
+  openApp("calculator","계산기");
+}
+
+function openTerminal(){
+  openApp("terminal","터미널");
+}
+
+function openBrowser(){
+  openApp("browser","브라우저");
+}
+
+function openSettings(){
+  openApp("settings","설정");
+}
+
+function openAbout(){
+  openApp("about","NovaOS");
+}
 
 
-function openApp(name){
+/* =====================================================
+   WINDOW SYSTEM
+===================================================== */
 
-  document
-    .getElementById("startMenu")
-    .classList.remove("open");
+function openApp(type,title){
 
-  if(openWindows[name]){
+  if(windows[type]){
 
-    const win=openWindows[name];
+    const win=windows[type];
 
     win.classList.remove("hidden");
 
@@ -1049,60 +1607,58 @@ function openApp(name){
 
   }
 
-  const info=apps[name];
-
-  if(!info) return;
-
   const win=
     document.createElement("div");
 
   win.className="window";
 
-  win.id="window-"+name;
-
   win.style.zIndex=++zIndex;
 
   const offset=
-    (windowCount%5)*25;
+    (windowOffset++%5)*25;
 
   win.style.left=
-    `calc(50% - 325px + ${offset}px)`;
+    `calc(50% - 350px + ${offset}px)`;
 
   win.style.top=
-    `calc(50% - 230px + ${offset}px)`;
+    `calc(50% - 235px + ${offset}px)`;
 
   win.innerHTML=`
 
-    <div class="titlebar">
+    <div
+      class="titlebar"
+      data-drag
+    >
 
-      <div class="title">
-        <span class="title-symbol">
-          ${info.symbol}
-        </span>
-        ${info.title}
+      <div class="traffic">
+
+        <button
+          class="close-btn"
+          onclick="closeApp('${type}')"
+        ></button>
+
+        <button
+          class="min-btn"
+          onclick="minimizeApp('${type}')"
+        ></button>
+
+        <button
+          class="max-btn"
+          onclick="maximizeApp('${type}')"
+        ></button>
+
       </div>
 
-      <div class="window-buttons">
-
-        <button
-          onclick="minimizeWindow('${name}')"
-        >−</button>
-
-        <button
-          onclick="maximizeWindow('${name}')"
-        >□</button>
-
-        <button
-          class="close"
-          onclick="closeWindow('${name}')"
-        >×</button>
-
+      <div class="window-title">
+        ${title}
       </div>
+
+      <div class="window-spacer"></div>
 
     </div>
 
     <div class="window-content">
-      ${getAppHTML(name)}
+      ${getAppContent(type)}
     </div>
 
   `;
@@ -1111,59 +1667,41 @@ function openApp(name){
     .getElementById("windows")
     .appendChild(win);
 
-  openWindows[name]=win;
-
-  windowCount++;
+  windows[type]=win;
 
   makeDraggable(win);
 
+  initializeApp(type);
+
   bringToFront(win);
 
-  addTaskApp(name);
+}
 
-  initializeApp(name);
+
+function closeApp(type){
+
+  if(!windows[type])
+    return;
+
+  windows[type].remove();
+
+  delete windows[type];
 
 }
 
 
-function closeWindow(name){
+function minimizeApp(type){
 
-  const win=openWindows[name];
-
-  if(!win) return;
-
-  win.remove();
-
-  delete openWindows[name];
-
-  const task=
-    document.querySelector(
-      `[data-task="${name}"]`
-    );
-
-  if(task)
-    task.remove();
+  if(windows[type])
+    windows[type].classList.add("hidden");
 
 }
 
 
-function minimizeWindow(name){
+function maximizeApp(type){
 
-  const win=openWindows[name];
-
-  if(win)
-    win.classList.add("hidden");
-
-}
-
-
-function maximizeWindow(name){
-
-  const win=openWindows[name];
-
-  if(!win) return;
-
-  win.classList.toggle("maximized");
+  if(windows[type])
+    windows[type].classList.toggle("maximized");
 
 }
 
@@ -1175,81 +1713,24 @@ function bringToFront(win){
 }
 
 
-document
-  .getElementById("windows")
-  .addEventListener("mousedown",function(e){
-
-    const win=e.target.closest(".window");
-
-    if(win)
-      bringToFront(win);
-
-  });
-
-
-/* ==========================
-   TASKBAR APPS
-========================== */
-
-function addTaskApp(name){
-
-  const bar=
-    document.getElementById("taskApps");
-
-  const button=
-    document.createElement("button");
-
-  button.className="task-app";
-
-  button.dataset.task=name;
-
-  button.textContent=
-    apps[name].symbol;
-
-  button.onclick=function(){
-
-    const win=openWindows[name];
-
-    if(!win) return;
-
-    if(win.classList.contains("hidden")){
-
-      win.classList.remove("hidden");
-      bringToFront(win);
-
-    }else{
-
-      minimizeWindow(name);
-
-    }
-
-  };
-
-  bar.appendChild(button);
-
-}
-
-
-/* ==========================
-   DRAG WINDOWS
-========================== */
+/* =====================================================
+   DRAG
+===================================================== */
 
 function makeDraggable(win){
 
-  const titlebar=
-    win.querySelector(".titlebar");
+  const bar=
+    win.querySelector("[data-drag]");
 
   let dragging=false;
   let offsetX=0;
   let offsetY=0;
 
-  titlebar.addEventListener(
+  bar.addEventListener(
     "mousedown",
     function(e){
 
-      if(
-        e.target.closest(".window-buttons")
-      )
+      if(e.target.tagName==="BUTTON")
         return;
 
       if(win.classList.contains("maximized"))
@@ -1260,8 +1741,11 @@ function makeDraggable(win){
       const rect=
         win.getBoundingClientRect();
 
-      offsetX=e.clientX-rect.left;
-      offsetY=e.clientY-rect.top;
+      offsetX=
+        e.clientX-rect.left;
+
+      offsetY=
+        e.clientY-rect.top;
 
       bringToFront(win);
 
@@ -1272,7 +1756,8 @@ function makeDraggable(win){
     "mousemove",
     function(e){
 
-      if(!dragging) return;
+      if(!dragging)
+        return;
 
       let x=
         e.clientX-offsetX;
@@ -1280,21 +1765,14 @@ function makeDraggable(win){
       let y=
         e.clientY-offsetY;
 
-      x=Math.max(
-        0,
-        Math.min(
-          window.innerWidth-win.offsetWidth,
-          x
-        )
-      );
+      const maxX=
+        window.innerWidth-win.offsetWidth;
 
-      y=Math.max(
-        0,
-        Math.min(
-          window.innerHeight-win.offsetHeight-70,
-          y
-        )
-      );
+      const maxY=
+        window.innerHeight-win.offsetHeight-70;
+
+      x=Math.max(0,Math.min(maxX,x));
+      y=Math.max(34,Math.min(maxY,y));
 
       win.style.left=x+"px";
       win.style.top=y+"px";
@@ -1305,94 +1783,82 @@ function makeDraggable(win){
   document.addEventListener(
     "mouseup",
     function(){
-
       dragging=false;
-
     }
   );
 
 }
 
 
-/* ==========================
-   APP HTML
-========================== */
+/* =====================================================
+   APP CONTENT
+===================================================== */
 
-function getAppHTML(name){
+function getAppContent(type){
 
-  if(name==="explorer"){
+  if(type==="finder"){
 
     return `
 
-      <div class="app-padding">
+      <div class="finder">
 
-        <h2 class="app-heading">
-          내 파일
-        </h2>
+        <aside class="sidebar">
 
-        <p class="app-description">
-          NOVA OS의 가상 파일 시스템
-        </p>
-
-        <div class="path-bar">
-
-          <div class="path">
-            NOVA:/User/Home
+          <div class="sidebar-title">
+            즐겨찾기
           </div>
 
-        </div>
+          <button class="side-btn active">
+            파일
+          </button>
 
-        <div class="file-grid">
+          <button class="side-btn">
+            최근 항목
+          </button>
 
-          <div class="file">
-            <div class="file-icon">DIR</div>
-            <b>Desktop</b>
-            <small>폴더</small>
+          <button class="side-btn">
+            문서
+          </button>
+
+          <button class="side-btn">
+            다운로드
+          </button>
+
+          <button class="side-btn">
+            사진
+          </button>
+
+        </aside>
+
+        <main class="finder-main">
+
+          <div class="finder-toolbar">
+
+            <button class="back">
+              ‹
+            </button>
+
+            <div class="finder-path">
+              사용자
+            </div>
+
           </div>
 
-          <div class="file">
-            <div class="file-icon">DIR</div>
-            <b>Downloads</b>
-            <small>폴더</small>
+          <div class="files">
+
+            ${file("폴더","문서","folder")}
+            ${file("폴더","다운로드","folder")}
+            ${file("폴더","사진","folder")}
+            ${file("폴더","음악","folder")}
+
+            ${file("TXT","README.txt","doc")}
+            ${file("NOVA","NovaOS.app","app")}
+            ${file("SYS","system.nova","doc")}
+            ${file("LOG","activity.log","doc")}
+
           </div>
 
-          <div class="file">
-            <div class="file-icon">DIR</div>
-            <b>Pictures</b>
-            <small>폴더</small>
-          </div>
-
-          <div class="file">
-            <div class="file-icon">DIR</div>
-            <b>Documents</b>
-            <small>폴더</small>
-          </div>
-
-          <div class="file">
-            <div class="file-icon">TXT</div>
-            <b>readme.txt</b>
-            <small>2 KB</small>
-          </div>
-
-          <div class="file">
-            <div class="file-icon">SYS</div>
-            <b>system.nova</b>
-            <small>system</small>
-          </div>
-
-          <div class="file">
-            <div class="file-icon">APP</div>
-            <b>apps.nova</b>
-            <small>system</small>
-          </div>
-
-          <div class="file">
-            <div class="file-icon">LOG</div>
-            <b>activity.log</b>
-            <small>1 KB</small>
-          </div>
-
-        </div>
+        </main>
 
       </div>
 
@@ -1401,29 +1867,31 @@ function getAppHTML(name){
   }
 
 
-  if(name==="notes"){
+  if(type==="notes"){
 
     return `
 
-      <div class="notes">
+      <div class="notes-app">
 
-        <textarea
-          id="notesArea"
-          placeholder="여기에 메모를 작성하세요..."
-        ></textarea>
+        <div class="notes-toolbar">
 
-        <div class="notes-bottom">
+          <b>메모</b>
 
-          <span>
-            자동 저장 활성화
-          </span>
-
-          <span id="noteStatus">
+          <span
+            class="notes-status"
+            id="notesStatus"
+          >
             저장됨
           </span>
 
         </div>
 
+        <textarea
+          id="notesArea"
+          placeholder="메모를 입력하세요..."
+          spellcheck="false"
+        ></textarea>
+
       </div>
 
     `;
@@ -1431,60 +1899,91 @@ function getAppHTML(name){
   }
 
 
-  if(name==="calculator"){
+  if(type==="calculator"){
 
     return `
 
-      <div class="calc">
+      <div class="calculator">
 
         <div
-          class="calc-display"
           id="calcDisplay"
-        >0</div>
+          class="calc-display"
+        >
+          0
+        </div>
 
         <div class="calc-grid">
 
-          <button onclick="calcClear()">AC</button>
-          <button onclick="calcDelete()">DEL</button>
           <button
-            class="operator"
+            class="special"
+            onclick="calcClear()"
+          >
+            AC
+          </button>
+
+          <button
+            class="special"
+            onclick="calcDelete()"
+          >
+            ⌫
+          </button>
+
+          <button
+            class="special"
             onclick="calcInput('%')"
-          >%</button>
+          >
+            %
+          </button>
+
           <button
             class="operator"
             onclick="calcInput('/')"
-          >/</button>
+          >
+            ÷
+          </button>
 
           <button onclick="calcInput('7')">7</button>
           <button onclick="calcInput('8')">8</button>
           <button onclick="calcInput('9')">9</button>
+
           <button
             class="operator"
             onclick="calcInput('*')"
-          >×</button>
+          >
+            ×
+          </button>
 
           <button onclick="calcInput('4')">4</button>
           <button onclick="calcInput('5')">5</button>
           <button onclick="calcInput('6')">6</button>
+
           <button
             class="operator"
             onclick="calcInput('-')"
-          >−</button>
+          >
+            −
+          </button>
 
           <button onclick="calcInput('1')">1</button>
           <button onclick="calcInput('2')">2</button>
           <button onclick="calcInput('3')">3</button>
+
           <button
             class="operator"
             onclick="calcInput('+')"
-          >+</button>
+          >
+            +
+          </button>
 
           <button onclick="calcInput('0')">0</button>
           <button onclick="calcInput('.')">.</button>
+
           <button
-            style="grid-column:span 2"
+            style="grid-column:span 2;border-radius:30px"
             onclick="calcEqual()"
-          >=</button>
+          >
+            =
+          </button>
 
         </div>
 
@@ -1495,7 +1994,7 @@ function getAppHTML(name){
   }
 
 
-  if(name==="terminal"){
+  if(type==="terminal"){
 
     return `
 
@@ -1504,14 +2003,18 @@ function getAppHTML(name){
         <div
           class="terminal-output"
           id="terminalOutput"
-        >NOVA Terminal v1.0
-Type "help" for available commands.
+        >NovaOS Terminal
+Version 1.0
+
+도움말을 보려면 help 를 입력하세요.
 
 </div>
 
-        <div class="terminal-line">
+        <div class="terminal-input-row">
 
-          <span>NOVA&gt;</span>
+          <span class="terminal-prompt">
+            nova$
+          </span>
 
           <input
             id="terminalInput"
@@ -1528,55 +2031,64 @@ Type "help" for available commands.
   }
 
 
-  if(name==="browser"){
+  if(type==="browser"){
 
     return `
 
       <div class="browser">
 
-        <div class="browser-bar">
+        <div class="browser-toolbar">
+
+          <button class="browser-circle">
+            ‹
+          </button>
+
+          <button class="browser-circle">
+            ›
+          </button>
 
           <input
-            id="browserInput"
+            id="browserAddress"
+            class="address"
             value="nova://home"
-            placeholder="주소 또는 검색어"
           >
 
           <button
+            class="browser-circle"
             onclick="browserGo()"
           >
-            GO
+            ↻
           </button>
 
         </div>
 
         <div
-          class="browser-page"
           id="browserPage"
+          class="browser-page"
         >
 
           <div class="browser-logo">
-            NOVA<span>WEB</span>
+            Nova<span>Web</span>
           </div>
 
           <p
             style="
-              color:#9299aa;
-              font-size:11px;
-              line-height:1.7;
+              color:#777;
+              font-size:12px;
+              margin-top:10px;
             "
           >
-            가상 브라우저입니다.<br>
-            주소나 검색어를 입력해보세요.
+            NovaOS 가상 브라우저
           </p>
 
-          <div class="search-result">
+          <div class="browser-card">
 
-            <b>NOVA Search</b>
+            <b>환영합니다.</b>
 
             <p>
-              실제 인터넷을 연결하지 않는
-              브라우저 시뮬레이션입니다.
+              주소창에 검색어를 입력해보세요.
+              이 브라우저는 NovaOS 안에서
+              작동하는 가상 브라우저입니다.
             </p>
 
           </div>
@@ -1590,87 +2102,113 @@ Type "help" for available commands.
   }
 
 
-  if(name==="settings"){
+  if(type==="settings"){
 
     return `
 
       <div class="settings">
 
-        <h2 class="app-heading">
-          설정
-        </h2>
+        <h2>시스템 설정</h2>
 
-        <p class="app-description">
-          NOVA OS의 모양과 환경을 설정합니다.
-        </p>
+        <div class="setting-card">
 
-        <div class="setting-row">
+          <div class="setting-row">
 
-          <div>
-            <b>배경화면</b>
-            <small>바탕화면 배경 변경</small>
+            <div>
+              <b>배경화면</b>
+              <small>
+                NovaOS 배경을 변경합니다.
+              </small>
+            </div>
+
+            <div class="wallpapers">
+
+              <button
+                class="wall a"
+                onclick="setWallpaper(1)"
+              ></button>
+
+              <button
+                class="wall b"
+                onclick="setWallpaper(2)"
+              ></button>
+
+              <button
+                class="wall c"
+                onclick="setWallpaper(3)"
+              ></button>
+
+              <button
+                class="wall d"
+                onclick="setWallpaper(4)"
+              ></button>
+
+            </div>
+
           </div>
 
-          <div class="wallpapers">
+          <div class="setting-row">
 
-            <button
-              class="wall one"
-              onclick="setWallpaper(1)"
-            ></button>
+            <div>
+              <b>강조 색상</b>
+              <small>
+                시스템 포인트 색상
+              </small>
+            </div>
 
-            <button
-              class="wall two"
-              onclick="setWallpaper(2)"
-            ></button>
-
-            <button
-              class="wall three"
-              onclick="setWallpaper(3)"
-            ></button>
-
-            <button
-              class="wall four"
-              onclick="setWallpaper(4)"
-            ></button>
+            <input
+              id="accentPicker"
+              type="color"
+              value="${saved.accent || "#007aff"}"
+              onchange="setAccent(this.value)"
+            >
 
           </div>
 
-        </div>
+          <div class="setting-row">
 
-        <div class="setting-row">
+            <div>
+              <b>시스템</b>
+              <small>
+                NovaOS Web Edition 1.0
+              </small>
+            </div>
 
-          <div>
-            <b>Accent</b>
-            <small>시스템 강조 색상</small>
+            <span
+              style="
+                color:#34a853;
+                font-size:10px;
+                font-weight:bold;
+              "
+            >
+              정상
+            </span>
+
           </div>
 
-          <input
-            type="color"
-            id="accentPicker"
-            value="${saved.accent || "#7c6cff"}"
-            onchange="setAccent(this.value)"
-          >
+          <div class="setting-row">
 
-        </div>
+            <div>
+              <b>데이터</b>
+              <small>
+                메모와 설정은 이 브라우저에 저장됩니다.
+              </small>
+            </div>
 
-        <div class="setting-row">
+            <button
+              onclick="resetData()"
+              style="
+                border:0;
+                border-radius:7px;
+                padding:7px 10px;
+                background:#eee;
+                font-size:10px;
+              "
+            >
+              초기화
+            </button>
 
-          <div>
-            <b>저장 데이터</b>
-            <small>메모 및 설정은 브라우저에 저장됩니다.</small>
           </div>
-
-          <button
-            onclick="resetOS()"
-            style="
-              padding:8px 11px;
-              border:1px solid var(--border);
-              border-radius:8px;
-              background:rgba(255,255,255,.05);
-            "
-          >
-            초기화
-          </button>
 
         </div>
 
@@ -1681,31 +2219,81 @@ Type "help" for available commands.
   }
 
 
-  if(name==="about"){
+  if(type==="about"){
 
     return `
 
-      <div class="about">
+      <div
+        style="
+          height:100%;
+          display:grid;
+          place-items:center;
+          background:#f5f5f7;
+        "
+      >
 
-        <div class="nova-logo">
-          N
+        <div
+          style="
+            text-align:center;
+            padding:30px;
+          "
+        >
+
+          <div
+            style="
+              width:82px;
+              height:82px;
+              margin:auto;
+
+              display:grid;
+              place-items:center;
+
+              border-radius:23px;
+
+              background:
+                linear-gradient(
+                  135deg,
+                  #111,
+                  #555
+                );
+
+              color:white;
+
+              font-size:28px;
+              font-weight:800;
+
+              box-shadow:
+                0 15px 30px #0002;
+            "
+          >
+            N
+          </div>
+
+          <h2
+            style="
+              margin:20px 0 5px;
+              font-size:21px;
+            "
+          >
+            NovaOS
+          </h2>
+
+          <p
+            style="
+              color:#777;
+              font-size:11px;
+              line-height:1.8;
+            "
+          >
+            Web Edition 1.0
+            <br>
+            HTML · CSS · JavaScript
+            <br><br>
+            브라우저에서 실행되는
+            가상 운영체제입니다.
+          </p>
+
         </div>
-
-        <h2>NOVA OS</h2>
-
-        <p>
-          Web-based virtual operating system
-          <br>
-          Version 1.0
-        </p>
-
-        <p>
-          이 OS는 HTML, CSS, JavaScript만으로
-          만들어진 가상 운영체제입니다.
-          <br><br>
-          서버와 데이터베이스 없이
-          브라우저에서 작동합니다.
-        </p>
 
       </div>
 
@@ -1718,16 +2306,48 @@ Type "help" for available commands.
 }
 
 
-/* ==========================
-   APP INITIALIZATION
-========================== */
+/* =====================================================
+   FILE HELPER
+===================================================== */
 
-function initializeApp(name){
+function file(type,name,kind){
 
-  if(name==="notes"){
+  return `
+
+    <div class="file">
+
+      <div
+        class="file-icon ${kind}"
+      >
+        ${type}
+      </div>
+
+      <div class="file-name">
+        ${name}
+      </div>
+
+    </div>
+
+  `;
+
+}
+
+
+/* =====================================================
+   NOTES
+===================================================== */
+
+function initializeApp(type){
+
+  if(type==="notes"){
 
     const area=
-      document.getElementById("notesArea");
+      document.getElementById(
+        "notesArea"
+      );
+
+    if(!area)
+      return;
 
     area.value=
       saved.notes || "";
@@ -1737,23 +2357,16 @@ function initializeApp(name){
       function(){
 
         saved.notes=this.value;
-        saveData();
+
+        save();
 
         const status=
-          document.getElementById("noteStatus");
+          document.getElementById(
+            "notesStatus"
+          );
 
-        status.textContent="저장 중...";
-
-        clearTimeout(
-          window.noteSaveTimer
-        );
-
-        window.noteSaveTimer=
-          setTimeout(()=>{
-
-            status.textContent="저장됨";
-
-          },400);
+        status.textContent=
+          "저장됨";
 
       }
     );
@@ -1761,7 +2374,7 @@ function initializeApp(name){
   }
 
 
-  if(name==="terminal"){
+  if(type==="terminal"){
 
     const input=
       document.getElementById(
@@ -1774,15 +2387,15 @@ function initializeApp(name){
       "keydown",
       function(e){
 
-        if(e.key!=="Enter")
-          return;
+        if(e.key==="Enter"){
 
-        const command=
-          input.value.trim();
+          terminalCommand(
+            input.value
+          );
 
-        runTerminalCommand(command);
+          input.value="";
 
-        input.value="";
+        }
 
       }
     );
@@ -1790,11 +2403,11 @@ function initializeApp(name){
   }
 
 
-  if(name==="browser"){
+  if(type==="browser"){
 
     const input=
       document.getElementById(
-        "browserInput"
+        "browserAddress"
       );
 
     input.addEventListener(
@@ -1812,60 +2425,85 @@ function initializeApp(name){
 }
 
 
-/* ==========================
+/* =====================================================
    CALCULATOR
-========================== */
+===================================================== */
 
 let calcValue="0";
 
-function updateCalc(){
+function calcDisplay(){
 
-  const display=
-    document.getElementById("calcDisplay");
+  const el=
+    document.getElementById(
+      "calcDisplay"
+    );
 
-  if(display)
-    display.textContent=calcValue;
+  if(el)
+    el.textContent=calcValue;
 
 }
 
 function calcInput(value){
 
-  if(calcValue==="0" &&
-     ![".","+","-","*","/","%"]
-       .includes(value)
+  if(calcValue==="ERROR")
+    calcValue="0";
+
+  if(
+    calcValue==="0" &&
+    ![".","+","-","*","/","%"]
+      .includes(value)
   ){
+
     calcValue=value;
+
   }else{
+
     calcValue+=value;
+
   }
 
-  updateCalc();
+  calcDisplay();
 
 }
+
 
 function calcClear(){
 
   calcValue="0";
-  updateCalc();
+
+  calcDisplay();
 
 }
+
 
 function calcDelete(){
 
-  calcValue=
-    calcValue.length>1
-    ? calcValue.slice(0,-1)
-    : "0";
+  if(calcValue==="ERROR"){
 
-  updateCalc();
+    calcValue="0";
+
+  }else{
+
+    calcValue=
+      calcValue.length>1
+      ? calcValue.slice(0,-1)
+      : "0";
+
+  }
+
+  calcDisplay();
 
 }
+
 
 function calcEqual(){
 
   try{
 
-    if(!/^[0-9+\-*/%.() ]+$/.test(calcValue))
+    if(
+      !/^[0-9+\-*/%.() ]+$/
+        .test(calcValue)
+    )
       throw new Error();
 
     const result=
@@ -1880,7 +2518,9 @@ function calcEqual(){
 
     calcValue=
       String(
-        Math.round(result*100000000)/100000000
+        Math.round(
+          result*100000000
+        )/100000000
       );
 
   }catch(e){
@@ -1889,16 +2529,16 @@ function calcEqual(){
 
   }
 
-  updateCalc();
+  calcDisplay();
 
 }
 
 
-/* ==========================
+/* =====================================================
    TERMINAL
-========================== */
+===================================================== */
 
-function runTerminalCommand(command){
+function terminalCommand(command){
 
   const output=
     document.getElementById(
@@ -1908,30 +2548,30 @@ function runTerminalCommand(command){
   if(!output)
     return;
 
+  const cmd=
+    command.trim();
+
   output.textContent+=
-    "NOVA> "+command+"\n";
+    "nova$ "+cmd+"\n";
 
   let result="";
 
-  const cmd=
-    command.toLowerCase();
-
   if(cmd===""){
+
     result="";
+
   }
 
   else if(cmd==="help"){
 
     result=
-`Available commands:
-
-help       명령어 목록
-clear      터미널 초기화
+`help       명령어 목록
+clear      화면 지우기
 date       현재 날짜
 time       현재 시간
 whoami     사용자 정보
-about      OS 정보
-neofetch   시스템 정보
+system     시스템 정보
+about      NovaOS 정보
 echo       텍스트 출력`;
 
   }
@@ -1946,14 +2586,30 @@ echo       텍스트 출력`;
   else if(cmd==="date"){
 
     result=
-      new Date().toLocaleDateString("ko-KR");
+      new Intl.DateTimeFormat(
+        "ko-KR",
+        {
+          timeZone:"Asia/Seoul",
+          dateStyle:"full"
+        }
+      ).format(
+        new Date()
+      );
 
   }
 
   else if(cmd==="time"){
 
     result=
-      new Date().toLocaleTimeString("ko-KR");
+      new Intl.DateTimeFormat(
+        "ko-KR",
+        {
+          timeZone:"Asia/Seoul",
+          timeStyle:"medium"
+        }
+      ).format(
+        new Date()
+      );
 
   }
 
@@ -1963,40 +2619,38 @@ echo       텍스트 출력`;
 
   }
 
+  else if(cmd==="system"){
+
+    result=
+`NovaOS Web Edition
+Browser: ${navigator.userAgent}
+Language: ${navigator.language}
+Platform: ${navigator.platform}`;
+
+  }
+
   else if(cmd==="about"){
 
     result=
-`NOVA OS
-Web Virtual Operating System
-Version 1.0`;
+`NovaOS
+Web Edition 1.0
+HTML / CSS / JavaScript`;
 
   }
 
-  else if(cmd==="neofetch"){
+  else if(
+    cmd.toLowerCase().startsWith("echo ")
+  ){
 
     result=
-`       N O V A
-----------------------
-OS       NOVA OS 1.0
-Kernel   NOVA-Web
-Shell    NOVA Terminal
-Browser  Web Browser
-Storage  localStorage
-Status   ONLINE`;
-
-  }
-
-  else if(cmd.startsWith("echo ")){
-
-    result=
-      command.substring(5);
+      cmd.substring(5);
 
   }
 
   else{
 
     result=
-      `"${command}" 명령어를 찾을 수 없습니다.`;
+      "command not found: "+cmd;
 
   }
 
@@ -2013,15 +2667,15 @@ Status   ONLINE`;
 }
 
 
-/* ==========================
+/* =====================================================
    BROWSER
-========================== */
+===================================================== */
 
 function browserGo(){
 
   const input=
     document.getElementById(
-      "browserInput"
+      "browserAddress"
     );
 
   const page=
@@ -2046,23 +2700,26 @@ function browserGo(){
     page.innerHTML=`
 
       <div class="browser-logo">
-        NOVA<span>WEB</span>
+        Nova<span>Web</span>
       </div>
 
       <p
         style="
-          color:#9299aa;
-          font-size:11px;
+          color:#777;
+          font-size:12px;
         "
       >
-        Welcome to NOVA Web.
+        NovaOS 가상 브라우저
       </p>
 
-      <div class="search-result">
-        <b>Home</b>
+      <div class="browser-card">
+
+        <b>홈</b>
+
         <p>
-          가상 브라우저 홈 화면입니다.
+          NovaWeb에 오신 것을 환영합니다.
         </p>
+
       </div>
 
     `;
@@ -2071,32 +2728,35 @@ function browserGo(){
 
   }
 
+  const safe=
+    escapeHTML(value);
+
   page.innerHTML=`
 
     <div class="browser-logo">
       Search
     </div>
 
-    <div class="search-result">
+    <div class="browser-card">
 
       <b>
-        ${escapeHTML(value)}
+        ${safe}
       </b>
 
       <p>
-        "${escapeHTML(value)}"에 대한
-        가상 검색 결과입니다.
+        "${safe}" 검색 결과를 표시하는
+        가상 페이지입니다.
       </p>
 
     </div>
 
-    <div class="search-result">
+    <div class="browser-card">
 
-      <b>NOVA Result</b>
+      <b>NovaWeb</b>
 
       <p>
-        이 브라우저는 데모용 가상 브라우저라
-        실제 웹사이트를 불러오지 않습니다.
+        실제 인터넷 사이트를 불러오는
+        브라우저가 아닌 OS 시뮬레이션입니다.
       </p>
 
     </div>
@@ -2118,9 +2778,37 @@ function escapeHTML(text){
 }
 
 
-/* ==========================
+/* =====================================================
+   LAUNCHPAD
+===================================================== */
+
+function toggleLaunchpad(){
+
+  document
+    .getElementById("launchpad")
+    .classList.toggle("open");
+
+}
+
+
+function launchBackground(e){
+
+  if(
+    e.target.id==="launchpad"
+  ){
+
+    document
+      .getElementById("launchpad")
+      .classList.remove("open");
+
+  }
+
+}
+
+
+/* =====================================================
    WALLPAPER
-========================== */
+===================================================== */
 
 function setWallpaper(num){
 
@@ -2130,40 +2818,30 @@ function setWallpaper(num){
     );
 
   desktop.classList.remove(
-    "wallpaper2",
-    "wallpaper3",
-    "wallpaper4"
+    "wall2",
+    "wall3",
+    "wall4"
   );
 
   if(num===2)
-    desktop.classList.add("wallpaper2");
+    desktop.classList.add("wall2");
 
   if(num===3)
-    desktop.classList.add("wallpaper3");
+    desktop.classList.add("wall3");
 
   if(num===4)
-    desktop.classList.add("wallpaper4");
+    desktop.classList.add("wall4");
 
   saved.wallpaper=num;
 
-  saveData();
+  save();
 
 }
 
 
-function loadWallpaper(){
-
-  const num=
-    saved.wallpaper || 1;
-
-  setWallpaper(num);
-
-}
-
-
-/* ==========================
+/* =====================================================
    ACCENT
-========================== */
+===================================================== */
 
 function setAccent(color){
 
@@ -2175,28 +2853,31 @@ function setAccent(color){
 
   saved.accent=color;
 
-  saveData();
+  save();
 
 }
 
 
-/* ==========================
+/* =====================================================
    RESET
-========================== */
+===================================================== */
 
-function resetOS(){
+function resetData(){
 
-  if(
-    !confirm(
-      "저장된 메모와 설정을 초기화할까요?"
-    )
-  )
+  const ok=
+    confirm(
+      "저장된 메모와 설정을 모두 초기화할까요?"
+    );
+
+  if(!ok)
     return;
 
   saved={};
 
   try{
-    localStorage.removeItem(storageKey);
+    localStorage.removeItem(
+      "novaOSData"
+    );
   }catch(e){}
 
   location.reload();
@@ -2204,9 +2885,9 @@ function resetOS(){
 }
 
 
-/* ==========================
-   INITIAL LOAD
-========================== */
+/* =====================================================
+   LOAD SETTINGS
+===================================================== */
 
 if(saved.accent){
 
@@ -2218,16 +2899,52 @@ if(saved.accent){
 
 }
 
-loadWallpaper();
+if(saved.wallpaper){
+
+  setWallpaper(
+    Number(saved.wallpaper)
+  );
+
+}
 
 
-/* ==========================
-   KEYBOARD SHORTCUTS
-========================== */
+/* =====================================================
+   GLOBAL CLICK
+===================================================== */
+
+document
+  .getElementById("windows")
+  .addEventListener(
+    "mousedown",
+    function(e){
+
+      const win=
+        e.target.closest(".window");
+
+      if(win)
+        bringToFront(win);
+
+    }
+  );
+
+
+/* =====================================================
+   KEYBOARD
+===================================================== */
 
 document.addEventListener(
   "keydown",
   function(e){
+
+    if(
+      e.key==="Escape"
+    ){
+
+      document
+        .getElementById("launchpad")
+        .classList.remove("open");
+
+    }
 
     if(
       e.ctrlKey &&
@@ -2236,18 +2953,8 @@ document.addEventListener(
     ){
 
       e.preventDefault();
-      openApp("terminal");
 
-    }
-
-    if(
-      e.ctrlKey &&
-      e.altKey &&
-      e.key.toLowerCase()==="n"
-    ){
-
-      e.preventDefault();
-      openApp("notes");
+      openTerminal();
 
     }
 
