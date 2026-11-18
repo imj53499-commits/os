@@ -190,7 +190,7 @@ textarea{width:100%;min-height:96px;border-radius:12px;border:1px solid var(--li
       <button class="icon-btn" id="themeBtn" title="테마 바꾸기" aria-label="테마 바꾸기"><svg class="i"><use href="#i-auto"/></svg></button>
     </div>
     <div class="bar" aria-hidden="true"><i id="barFill"></i></div>
-    <div class="bar-meta"><span id="nowStep">지금: —</span><span><b id="doneCount">0</b> / <span id="totalCount">5</span> 완료</span></div>
+    <div class="bar-meta"><span id="nowStep">지금: —</span><span><b id="doneCount">0</b> / <span id="totalCount">8</span> 완료</span></div>
   </div>
 </div>
 
@@ -198,7 +198,8 @@ textarea{width:100%;min-height:96px;border-radius:12px;border:1px solid var(--li
   <header class="head">
     <div class="date">2026년 11월 19일 (목) · 개인 이동 일정</div>
     <h1>서울 센트럴시티 → <span>탄방역 1번 출구</span></h1>
-    <div class="note">총 예상 약 2시간 20분 · 11:45 출발 → 13:30 신탄진 → 14:05 전후 탄방역</div>
+    <div class="note">총 예상 약 2시간 20분 · 11:45 출발 → 13:30 신탄진 → 14:05 탄방역</div>
+    <div class="facts" style="margin-top:6px"><span class="fact">거래 <b>15:00</b></span><span class="fact">신탄진 복귀 <b>16:00까지</b></span></div>
   </header>
 
   <!-- 고속버스 티켓 요약 -->
@@ -269,7 +270,7 @@ textarea{width:100%;min-height:96px;border-radius:12px;border:1px solid var(--li
   const FROM = { name: "신탄진역", lat: 36.4515, lng: 127.4296 };
   const TO   = { name: "탄방역 1번출구", lat: 36.3488, lng: 127.3960 };
   const enc = encodeURIComponent;
-  const MAPS = [
+  const mkMaps = (FROM, TO, gFrom, gTo) => [
     { name: "네이버 지도", color: "#03c75a",
       web: `https://map.naver.com/p/directions/${FROM.lng},${FROM.lat},${enc(FROM.name)},,/${TO.lng},${TO.lat},${enc(TO.name)},,/-/transit`,
       app: `nmap://route/public?slat=${FROM.lat}&slng=${FROM.lng}&sname=${enc(FROM.name)}&dlat=${TO.lat}&dlng=${TO.lng}&dname=${enc(TO.name)}&appname=trip.planner` },
@@ -277,9 +278,11 @@ textarea{width:100%;min-height:96px;border-radius:12px;border:1px solid var(--li
       web: `https://map.kakao.com/link/by/traffic/${enc(FROM.name)},${FROM.lat},${FROM.lng}/${enc(TO.name)},${TO.lat},${TO.lng}`,
       app: `kakaomap://route?sp=${FROM.lat},${FROM.lng}&ep=${TO.lat},${TO.lng}&by=PUBLICTRANSIT` },
     { name: "구글 지도", color: "#4285f4",
-      web: `https://www.google.com/maps/dir/?api=1&origin=${enc("신탄진역 대전")}&destination=${enc("탄방역 1번출구 대전")}&travelmode=transit`,
+      web: `https://www.google.com/maps/dir/?api=1&origin=${enc(gFrom)}&destination=${enc(gTo)}&travelmode=transit`,
       app: null },
   ];
+  const MAPS = mkMaps(FROM, TO, "신탄진역 대전", "탄방역 1번출구 대전");
+  const MAPS_BACK = mkMaps(TO, FROM, "탄방역 대전", "신탄진역 대전");
 
   const STEPS = [
     { id: "board", icon: "i-bus", time: "11:45", start: at(11,45), title: "고속버스 탑승",
@@ -326,10 +329,35 @@ textarea{width:100%;min-height:96px;border-radius:12px;border:1px solid var(--li
       place: "대전 서구 · 최종 목적지",
       facts: [["신탄진 출발", "13:35"], ["예상 도착", "14:05 전후"]],
       tips: [
-        "신탄진에서 탄방역까지는 약 34분이지만, 705번을 15~20분 기다리면 14:20~14:25쯤 도착할 수 있어요.",
+        "15:00 거래까지 약 55분 여유가 있어요. 705번을 20분 기다려도 14:25쯤 도착해 30분 넘게 남아요.",
         "둔산에서 버스 환승 대기가 길면 지하철(방법 B)이 시간 예측이 쉬워요.",
         "역 안 출구 안내판에서 1번 출구를 찾아 나가세요.",
         "약속 상대에게 도착 시각을 미리 공유해 두면 좋아요."
+      ] },
+    { id: "deal", icon: "i-pin", time: "15:00", start: at(15,0), title: "거래",
+      place: "탄방역 1번 출구 앞",
+      facts: [["거래 시작", "15:00"], ["늦어도 끝내기", "15:10"]],
+      warn: "16:00까지 신탄진에 가려면 15:10에는 출발해야 해요. 거래는 10분 안에 끝내세요.",
+      tips: [
+        "상대에게 장소를 '탄방역 1번 출구 앞'으로 정확히 알려두면 만나는 시간을 줄일 수 있어요.",
+        "물건 확인과 결제 방법(계좌이체 등)을 미리 정해두세요.",
+        "14:55쯤 지도 앱에서 탄방역 → 신탄진 경로와 705번 도착 시각을 미리 보세요."
+      ] },
+    { id: "back", icon: "i-swap", time: "15:10", start: at(15,10), title: "신탄진역으로 복귀",
+      place: "탄방역 → 지하철 반석 방면 → 정부청사·시청 → 705번",
+      bus: ["705", "703"],
+      maps: "back",
+      tips: [
+        "지하철은 반석 방면(아침과 반대)으로 타서 시청역(1정거장) 또는 정부청사역(2정거장)에서 내리세요.",
+        "내린 뒤 둔산 정류장에서 신탄진 방면 705번(또는 703번)을 타세요.",
+        "705번이 15분 넘게 안 오면 늦을 수 있어요. 그때는 택시를 예비로 생각해 두세요(탄방역 → 신탄진역 약 25~30분)."
+      ] },
+    { id: "return", icon: "i-flag", time: "16:00", start: at(16,0), title: "신탄진역 도착",
+      place: "16:00까지 도착",
+      facts: [["예상 도착", "15:45~16:00"]],
+      tips: [
+        "15:10 출발 기준 이동 약 34분 + 버스 대기를 더하면 15:45~16:00 도착이에요.",
+        "여유가 거의 없으니 거래가 늦어지면 바로 출발 시각부터 확인하세요."
       ] }
   ];
 
@@ -353,10 +381,11 @@ textarea{width:100%;min-height:96px;border-radius:12px;border:1px solid var(--li
     if (s.bus) body += `<div class="facts">${s.bus.map((b, j) => `<span class="busno" title="간선버스">${b}</span>${j === 0 ? '<span class="note" style="align-self:center">우선</span>' : '<span class="note" style="align-self:center">대체</span>'}`).join("")}</div>`;
     if (s.warn) body += `<div class="warn">${esc(s.warn)}</div>`;
     if (s.options) body += `<div class="opts">${s.options.map(o => `<div class="opt"><h4><span class="tag">방법 ${o.tag}</span>${esc(o.title)}</h4>${esc(o.text)}</div>`).join("")}</div>`;
+    const ML = s.maps === "back" ? MAPS_BACK : MAPS;
     if (s.maps) body += `
-      <div class="label" style="margin-top:2px">길찾기 · 신탄진역 → 탄방역 1번 출구</div>
-      <div class="maps">${MAPS.map(m => `<a class="map" href="${m.web}" target="_blank" rel="noopener"><span class="dot" style="background:${m.color}"></span>${m.name}<small>대중교통</small></a>`).join("")}</div>
-      <div class="applinks">앱으로 바로 열기: ${MAPS.filter(m => m.app).map(m => `<a href="${m.app}">${m.name} 앱</a>`).join("")}</div>`;
+      <div class="label" style="margin-top:2px">길찾기 · ${s.maps === "back" ? "탄방역 → 신탄진역" : "신탄진역 → 탄방역 1번 출구"}</div>
+      <div class="maps">${ML.map(m => `<a class="map" href="${m.web}" target="_blank" rel="noopener"><span class="dot" style="background:${m.color}"></span>${m.name}<small>대중교통</small></a>`).join("")}</div>
+      <div class="applinks">앱으로 바로 열기: ${ML.filter(m => m.app).map(m => `<a href="${m.app}">${m.name} 앱</a>`).join("")}</div>`;
     const open = state.open[s.id] ?? (i === cur);
     body += `<details data-id="${s.id}"${open ? " open" : ""}><summary>${icon("i-info", "width:18px;height:18px;color:var(--accent)")}유의사항 ${s.tips.length}개${icon("i-chev", "width:18px;height:18px").replace('class="i"', 'class="i chev"')}</summary>
       <ul class="tips">${s.tips.map(t => `<li>${esc(t)}</li>`).join("")}</ul></details>`;
@@ -393,13 +422,16 @@ textarea{width:100%;min-height:96px;border-radius:12px;border:1px solid var(--li
   }
   function tick() {
     const now = Date.now();
-    const dep = at(11,45), arr = at(13,30), goal = at(14,5);
+    const dep = at(11,45), arr = at(13,30), goal = at(14,5), deal = at(15,0), leave = at(15,10), back = at(16,0);
     let label, value;
     if (state.done.length === STEPS.length) { label = "모든 단계 완료"; value = "도착 ✓"; }
     else if (now < dep) { label = "고속버스 출발(11:45)까지"; value = fmt(dep - now); }
     else if (now < arr) { label = "신탄진역 도착(13:30)까지"; value = fmt(arr - now); }
     else if (now < goal) { label = "탄방역 1번 출구 도착 예정(14:05)까지"; value = fmt(goal - now); }
-    else { label = "예상 도착 시각(14:05) 경과"; value = "+" + fmt(now - goal); }
+    else if (now < deal) { label = "거래 시작(15:00)까지"; value = fmt(deal - now); }
+    else if (now < leave) { label = "신탄진으로 출발(15:10)까지"; value = fmt(leave - now); }
+    else if (now < back) { label = "신탄진역 도착 마감(16:00)까지"; value = fmt(back - now); }
+    else { label = "16:00 경과"; value = "+" + fmt(now - back); }
     $("#cdLabel").textContent = label;
     $("#cdTime").textContent = value;
   }
