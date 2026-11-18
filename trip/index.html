@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>11/19 대전 이동 여정</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="theme-color" content="#0f1418">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@500;700&family=Noto+Sans+KR:wght@400;500;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+/* Layout: one thumb-width column. Sticky status bar (countdown + progress) → ticket stub → vertical route line with step cards. */
+:root{
+  --bg:#eef2f1; --card:#ffffff; --card-2:#f5f8f7; --ink:#111a17; --muted:#5b6b66; --line:#d5dfdb;
+  --accent:#0b7a57;          /* Daejeon line-1 green */
+  --accent-ink:#ffffff;
+  --accent-soft:#dcf1e8;
+  --sign:#f4b400;            /* terminal signage amber, for platform/seat */
+  --sign-ink:#1b1400;
+  --done:#8a9893;
+  --warn:#b4530a; --warn-soft:#fdecdc;
+  --f-display:"IBM Plex Sans KR","Noto Sans KR",system-ui,sans-serif;
+  --f-body:"Noto Sans KR",system-ui,-apple-system,"Apple SD Gothic Neo",sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,"SF Mono",Menlo,monospace;
+  --r:18px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0c1113; --card:#151c1f; --card-2:#1b2427; --ink:#eaf2ef; --muted:#93a39e; --line:#29363a;
+    --accent:#2fc48f; --accent-ink:#04140d; --accent-soft:#123227;
+    --sign:#ffc533; --sign-ink:#1b1400; --done:#5f6e69; --warn:#ffad66; --warn-soft:#3a2615;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0c1113; --card:#151c1f; --card-2:#1b2427; --ink:#eaf2ef; --muted:#93a39e; --line:#29363a;
+  --accent:#2fc48f; --accent-ink:#04140d; --accent-soft:#123227;
+  --sign:#ffc533; --sign-ink:#1b1400; --done:#5f6e69; --warn:#ffad66; --warn-soft:#3a2615;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:17px;line-height:1.55;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 40px;
+  -webkit-text-size-adjust:100%}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+button{font:inherit;color:inherit;cursor:pointer}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:10px}
+.wrap{max-width:520px;margin:0 auto;display:flex;flex-direction:column;gap:16px}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0;line-height:1.25}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.label{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700}
+svg.i{width:22px;height:22px;flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+/* ---------- sticky status ---------- */
+.status{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;margin-inline:calc(-1 * max(16px,env(safe-area-inset-left,0px)));
+  padding:12px max(16px,env(safe-area-inset-right,0px)) 12px max(16px,env(safe-area-inset-left,0px));
+  background:var(--bg);border-bottom:1px solid var(--line)}
+.status-in{max-width:520px;margin:0 auto;display:flex;flex-direction:column;gap:10px}
+.status-row{display:flex;align-items:center;gap:12px}
+.cd{flex:1;min-width:0}
+.cd-label{font-size:13px;color:var(--muted);font-weight:500}
+.cd-time{font-family:var(--f-mono);font-size:30px;font-weight:600;letter-spacing:-.01em;line-height:1.1;font-variant-numeric:tabular-nums}
+.icon-btn{width:44px;height:44px;border-radius:12px;border:1px solid var(--line);background:var(--card);display:grid;place-items:center}
+.icon-btn[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.bar{height:8px;border-radius:99px;background:var(--line);overflow:hidden}
+.bar>i{display:block;height:100%;width:0;background:var(--accent);border-radius:99px;transition:width .35s ease}
+.bar-meta{display:flex;justify-content:space-between;font-size:13px;color:var(--muted)}
+.bar-meta b{color:var(--ink)}
+
+/* ---------- header ---------- */
+.head{padding-top:18px;display:flex;flex-direction:column;gap:4px}
+.head .date{font-size:15px;color:var(--muted);font-weight:500}
+.head h1{font-size:26px}
+.head h1 span{color:var(--accent)}
+
+/* ---------- ticket ---------- */
+.ticket{background:var(--card);border-radius:var(--r);border:1px solid var(--line);overflow:hidden;box-shadow:0 1px 0 var(--line),0 10px 30px -18px rgba(0,0,0,.35)}
+.t-top{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:14px 18px;background:var(--card-2);border-bottom:1px dashed var(--line);font-size:14px}
+.t-top b{font-weight:700}
+.chip{display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:700;padding:3px 9px;border-radius:99px;background:var(--accent-soft);color:var(--accent)}
+.t-big{display:grid;grid-template-columns:repeat(3,1fr);gap:0}
+.t-big>div{padding:16px 10px 14px;text-align:center;display:flex;flex-direction:column;gap:2px;align-items:center}
+.t-big>div+div{border-left:1px solid var(--line)}
+.t-big .v{font-family:var(--f-mono);font-weight:600;font-size:40px;line-height:1;font-variant-numeric:tabular-nums}
+.t-big .sign{background:var(--sign);color:var(--sign-ink);border-radius:12px;padding:6px 14px}
+.t-big .k{font-size:13px;color:var(--muted);font-weight:500}
+.t-route{display:flex;align-items:center;gap:10px;padding:12px 18px;border-top:1px solid var(--line);font-weight:700;font-size:16px}
+.t-route .arrow{flex:1;height:2px;background:repeating-linear-gradient(90deg,var(--muted) 0 6px,transparent 6px 10px);min-width:20px}
+.t-route small{display:block;font-weight:400;font-size:13px;color:var(--muted)}
+.t-code{display:flex;align-items:center;gap:10px;padding:14px 18px;border-top:1px dashed var(--line);background:var(--card-2)}
+.t-code .txt{flex:1;min-width:0}
+.t-code .num{font-family:var(--f-mono);font-size:19px;font-weight:600;word-break:break-all;user-select:all}
+.t-code .sub{font-family:var(--f-mono);font-size:14px;color:var(--muted)}
+.copy{display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:0 14px;border-radius:12px;border:0;background:var(--accent);color:var(--accent-ink);font-weight:700;font-size:15px;white-space:nowrap}
+.copy.ghost{background:transparent;color:var(--accent);border:1.5px solid var(--accent)}
+.t-meta{display:grid;grid-template-columns:repeat(2,1fr);gap:10px 16px;padding:14px 18px;border-top:1px solid var(--line);font-size:14px}
+.t-meta div{display:flex;flex-direction:column}
+.t-meta span{color:var(--muted);font-size:12px}
+
+/* ---------- timeline ---------- */
+.section-h{display:flex;align-items:baseline;justify-content:space-between;gap:8px;padding-top:6px}
+.section-h h2{font-size:20px}
+.tl{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:14px;position:relative}
+.tl::before{content:"";position:absolute;left:21px;top:20px;bottom:20px;width:3px;background:var(--line);border-radius:3px}
+.step{position:relative;display:grid;grid-template-columns:44px 1fr;gap:12px}
+.node{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:var(--card);border:3px solid var(--line);color:var(--muted);z-index:1}
+.step.now .node{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);box-shadow:0 0 0 6px var(--accent-soft)}
+.step.done .node{background:var(--done);border-color:var(--done);color:var(--card)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px 16px;min-width:0;display:flex;flex-direction:column;gap:10px}
+.step.now .card{border:2px solid var(--accent)}
+.step.done .card{opacity:.72}
+.c-head{display:flex;align-items:flex-start;gap:10px;justify-content:space-between}
+.c-time{font-family:var(--f-mono);font-weight:600;font-size:15px;color:var(--accent)}
+.step.done .c-time{color:var(--done)}
+.c-title{font-size:19px;font-weight:700;font-family:var(--f-display)}
+.step.done .c-title{text-decoration:line-through;text-decoration-thickness:2px;text-decoration-color:var(--done)}
+.c-place{font-size:15px;color:var(--muted)}
+.badge{flex:none;font-size:12px;font-weight:700;padding:4px 10px;border-radius:99px;background:var(--card-2);color:var(--muted);border:1px solid var(--line);white-space:nowrap}
+.step.now .badge{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.facts{display:flex;flex-wrap:wrap;gap:6px}
+.fact{font-size:14px;padding:4px 10px;border-radius:10px;background:var(--card-2);border:1px solid var(--line)}
+.fact b{font-family:var(--f-mono);font-weight:600}
+.busno{display:inline-flex;align-items:center;justify-content:center;min-width:52px;padding:2px 8px;border-radius:8px;background:#1f63d6;color:#fff;font-family:var(--f-mono);font-weight:600;font-size:16px}
+.ol{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px;font-size:15px}
+.opts{display:grid;gap:8px}
+.opt{border:1px solid var(--line);border-radius:14px;padding:10px 12px;background:var(--card-2);font-size:15px}
+.opt h4{margin:0 0 2px;font-size:15px;display:flex;align-items:center;gap:6px}
+.opt .tag{font-size:11px;font-weight:700;padding:2px 7px;border-radius:6px;background:var(--accent);color:var(--accent-ink)}
+.maps{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.map{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-height:58px;border-radius:14px;text-decoration:none;font-weight:700;font-size:15px;border:1px solid var(--line);background:var(--card-2)}
+.map small{font-weight:400;font-size:11px;color:var(--muted)}
+.map .dot{width:10px;height:10px;border-radius:50%}
+.applinks{font-size:13px;color:var(--muted);display:flex;flex-wrap:wrap;gap:4px 12px}
+.applinks a{color:var(--accent);font-weight:500}
+details{border-top:1px solid var(--line);padding-top:8px}
+summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:8px;font-weight:700;font-size:15px;min-height:40px;color:var(--ink)}
+summary::-webkit-details-marker{display:none}
+summary .chev{margin-left:auto;transition:transform .2s}
+details[open] summary .chev{transform:rotate(180deg)}
+.tips{margin:4px 0 0;padding-left:18px;display:flex;flex-direction:column;gap:6px;font-size:15px;color:var(--ink)}
+.tips li::marker{color:var(--accent)}
+.warn{background:var(--warn-soft);color:var(--warn);border-radius:12px;padding:8px 12px;font-size:14px;font-weight:500}
+.check{display:flex;align-items:center;justify-content:center;gap:8px;min-height:52px;border-radius:14px;border:2px solid var(--accent);background:transparent;color:var(--accent);font-weight:700;font-size:17px}
+.step.now .check{background:var(--accent);color:var(--accent-ink)}
+.step.done .check{border-color:var(--line);color:var(--muted);background:var(--card-2);font-weight:500;font-size:15px}
+
+/* ---------- memo & footer ---------- */
+.panel{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px;display:flex;flex-direction:column;gap:10px}
+.panel h2{font-size:18px}
+textarea{width:100%;min-height:96px;border-radius:12px;border:1px solid var(--line);background:var(--card-2);color:var(--ink);padding:10px 12px;font:inherit;font-size:16px;resize:vertical}
+.row{display:flex;flex-wrap:wrap;gap:8px}
+.btn{min-height:44px;padding:0 14px;border-radius:12px;border:1px solid var(--line);background:var(--card-2);font-weight:500;font-size:15px}
+.btn.danger{color:var(--warn);border-color:var(--warn)}
+.note{font-size:13px;color:var(--muted)}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%) translateY(20px);opacity:0;pointer-events:none;
+  background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:99px;font-weight:700;font-size:15px;transition:.25s;z-index:20;max-width:calc(100% - 32px)}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+@media (prefers-reduced-motion: reduce){*{transition:none!important}}
+@media (max-width:380px){.t-big .v{font-size:32px}.cd-time{font-size:26px}}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-bus" viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="15" rx="3"/><path d="M4 11h16M8 18v2M16 18v2"/><circle cx="8" cy="14.5" r=".6"/><circle cx="16" cy="14.5" r=".6"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></symbol>
+  <symbol id="i-swap" viewBox="0 0 24 24"><path d="M7 4 3 8l4 4M3 8h14M17 20l4-4-4-4M21 16H7"/></symbol>
+  <symbol id="i-train" viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="14" rx="4"/><path d="M5 10h14M9 21l-2-4M15 21l2-4"/><circle cx="9" cy="13.5" r=".6"/><circle cx="15" cy="13.5" r=".6"/></symbol>
+  <symbol id="i-flag" viewBox="0 0 24 24"><path d="M5 21V4M5 4h11l-2 4 2 4H5"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5 10 17l9-10"/></symbol>
+  <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h3"/></symbol>
+  <symbol id="i-chev" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></symbol>
+  <symbol id="i-auto" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 0 1 0 16z" fill="currentColor"/></symbol>
+  <symbol id="i-bulb" viewBox="0 0 24 24"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2V16h5v-.1c0-.8.4-1.5 1-2A6 6 0 0 0 12 3z"/></symbol>
+  <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></symbol>
+</svg>
+
+<div class="status" role="region" aria-label="진행 상태">
+  <div class="status-in">
+    <div class="status-row">
+      <div class="cd">
+        <div class="cd-label" id="cdLabel">고속버스 출발까지</div>
+        <div class="cd-time" id="cdTime" aria-live="off">--:--:--</div>
+      </div>
+      <button class="icon-btn" id="wakeBtn" aria-pressed="false" title="화면 켜두기" aria-label="화면 켜두기"><svg class="i"><use href="#i-bulb"/></svg></button>
+      <button class="icon-btn" id="themeBtn" title="테마 바꾸기" aria-label="테마 바꾸기"><svg class="i"><use href="#i-auto"/></svg></button>
+    </div>
+    <div class="bar" aria-hidden="true"><i id="barFill"></i></div>
+    <div class="bar-meta"><span id="nowStep">지금: —</span><span><b id="doneCount">0</b> / <span id="totalCount">5</span> 완료</span></div>
+  </div>
+</div>
+
+<main class="wrap">
+  <header class="head">
+    <div class="date">2026년 11월 19일 (목) · 개인 이동 일정</div>
+    <h1>서울 센트럴시티 → <span>탄방역 1번 출구</span></h1>
+    <div class="note">총 예상 약 2시간 20분 · 09:55 출발 → 12:15~12:20 도착</div>
+  </header>
+
+  <!-- 고속버스 티켓 요약 -->
+  <section class="ticket" aria-label="고속버스 티켓">
+    <div class="t-top">
+      <span><b>금호고속</b> · 우등(일반)</span>
+      <span class="chip"><svg class="i" style="width:14px;height:14px"><use href="#i-bus"/></svg>1구간 고속버스</span>
+    </div>
+    <div class="t-big">
+      <div><span class="k">승차홈</span><span class="v sign">8</span><span class="k">번</span></div>
+      <div><span class="k">좌석</span><span class="v">24</span><span class="k">번</span></div>
+      <div><span class="k">출발</span><span class="v" style="font-size:32px;padding-block:4px">09:55</span><span class="k">11.19 (목)</span></div>
+    </div>
+    <div class="t-route">
+      <div>센트럴시티<small>서울</small></div>
+      <div class="arrow" aria-hidden="true"></div>
+      <div style="text-align:right">신탄진역<small>유성복합행 경유 · 약 11:40</small></div>
+    </div>
+    <div class="t-code">
+      <div class="txt">
+        <div class="label">예매번호</div>
+        <div class="num" id="resNo">20261118-995-86-6218</div>
+        <div class="sub">(02130324)</div>
+      </div>
+      <button class="copy" data-copy="20261118-995-86-6218" data-msg="예매번호를 복사했어요"><svg class="i"><use href="#i-copy"/></svg>복사</button>
+    </div>
+    <div class="t-meta">
+      <div><span>결제금액</span><b class="mono">16,900원</b></div>
+      <div><span>예상 소요</span><b>1시간 45분</b></div>
+      <div><span>보조번호</span><b class="mono">02130324</b></div>
+      <div style="align-items:flex-start;justify-content:flex-end">
+        <button class="copy ghost" id="copyAll" style="min-height:36px;font-size:13px;padding:0 10px">티켓 정보 전체 복사</button>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-h">
+    <h2>이동 타임라인</h2>
+    <span class="note">탭해서 완료 체크</span>
+  </div>
+  <ol class="tl" id="timeline"></ol>
+
+  <section class="panel" aria-labelledby="memoH">
+    <h2 id="memoH">알람 · 메모</h2>
+    <textarea id="memo" placeholder="예: 08:30 집에서 출발 알람 / 티머니 잔액 충전하기"></textarea>
+    <div class="note">메모와 체크 상태는 이 기기 브라우저에만 저장됩니다.</div>
+  </section>
+
+  <section class="panel">
+    <div class="row">
+      <button class="btn danger" id="resetBtn">체크 모두 초기화</button>
+      <button class="btn" id="resetYes" hidden>정말 초기화</button>
+      <button class="btn" id="resetNo" hidden>취소</button>
+    </div>
+    <p class="note" style="margin:0">시내 구간 시간은 예상치입니다. 버스 도착 시각과 배차는 출발 직전에 지도 앱의 실시간 정보로 확인하세요.</p>
+  </section>
+</main>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function(){
+  /* ===== 여정 데이터 ===== */
+  const KST = 9 * 60; // minutes
+  const at = (h, m) => Date.UTC(2026, 10, 19, h, m) - KST * 60000; // 2026-11-19 h:m KST → epoch ms
+
+  const FROM = { name: "신탄진역", lat: 36.4515, lng: 127.4296 };
+  const TO   = { name: "탄방역 1번출구", lat: 36.3488, lng: 127.3960 };
+  const enc = encodeURIComponent;
+  const MAPS = [
+    { name: "네이버 지도", color: "#03c75a",
+      web: `https://map.naver.com/p/directions/${FROM.lng},${FROM.lat},${enc(FROM.name)},,/${TO.lng},${TO.lat},${enc(TO.name)},,/-/transit`,
+      app: `nmap://route/public?slat=${FROM.lat}&slng=${FROM.lng}&sname=${enc(FROM.name)}&dlat=${TO.lat}&dlng=${TO.lng}&dname=${enc(TO.name)}&appname=trip.planner` },
+    { name: "카카오맵", color: "#fee500",
+      web: `https://map.kakao.com/link/by/traffic/${enc(FROM.name)},${FROM.lat},${FROM.lng}/${enc(TO.name)},${TO.lat},${TO.lng}`,
+      app: `kakaomap://route?sp=${FROM.lat},${FROM.lng}&ep=${TO.lat},${TO.lng}&by=PUBLICTRANSIT` },
+    { name: "구글 지도", color: "#4285f4",
+      web: `https://www.google.com/maps/dir/?api=1&origin=${enc("신탄진역 대전")}&destination=${enc("탄방역 1번출구 대전")}&travelmode=transit`,
+      app: null },
+  ];
+
+  const STEPS = [
+    { id: "board", icon: "i-bus", time: "09:55", start: at(9,55), title: "고속버스 탑승",
+      place: "센트럴시티(서울) · 승차홈 8번",
+      facts: [["좌석", "24번"], ["승차홈", "8번"], ["금호고속", "우등"]],
+      tips: [
+        "센트럴시티는 호남선 터미널입니다. 경부선(서울고속버스터미널) 건물과 다르니 입구를 확인하세요.",
+        "출발 10~15분 전(09:40쯤)까지 8번 승차홈에 도착하면 여유 있어요.",
+        "모바일 승차권 또는 예매번호(위 티켓 카드)를 바로 열 수 있게 준비하세요.",
+        "탑승 전 화장실, 물 챙기기. 휴게소 정차가 없을 수 있어요."
+      ] },
+    { id: "arrive", icon: "i-pin", time: "11:40", start: at(11,40), title: "신탄진역 도착 · 하차",
+      place: "유성복합행 경유 · 예상 소요 1시간 45분",
+      facts: [["예상 도착", "11:40"]],
+      warn: "종점(유성복합)까지 가지 않고 신탄진에서 내립니다. 정차 안내방송을 꼭 들으세요.",
+      tips: [
+        "도로 상황에 따라 10~20분 늦어질 수 있어요. 이후 일정은 실제 도착 시각 기준으로 계산하세요.",
+        "내리기 전 좌석 24번 주변 소지품을 확인하세요.",
+        "하차하면 바로 지도 앱으로 705번 실시간 도착 정보를 확인하세요."
+      ] },
+    { id: "citybus", icon: "i-swap", time: "11:45", start: at(11,45), title: "시내버스 환승 · 705번",
+      place: "신탄진역 정류장 → 둔산동 방면",
+      bus: ["705", "703"],
+      maps: true,
+      tips: [
+        "간선버스 705번 우선, 먼저 오면 703번도 가능합니다. 둔산(정부청사·시청) 방면 정류장인지 확인하세요.",
+        "배차 간격이 10~20분 이상일 수 있어요. 카카오맵·네이버 지도·대전 버스정보(BIS)로 도착 시각을 먼저 보세요.",
+        "교통카드로 탑승하고 내릴 때도 꼭 태그하세요. 하차 태그를 해야 지하철·버스 환승할인이 적용됩니다.",
+        "정부청사서문, 이마트, 시청환승지 같은 정류장 이름을 기억해 두면 하차 시점을 놓치지 않아요."
+      ] },
+    { id: "transfer", icon: "i-train", time: "12:05", start: at(12,5), title: "둔산 하차 → 탄방역으로 이동",
+      place: "정부청사서문 · 이마트 · 시청환승지 일대에서 하차",
+      options: [
+        { tag: "A", title: "시내버스 환승", text: "같은 정류장 일대에서 탄방역 방면 시내버스로 환승해 탄방역 정류장 하차." },
+        { tag: "B", title: "대전 지하철 1호선", text: "정부청사역 또는 시청역에서 판암 방면 탑승 → 탄방역 하차. 시청역에서 1정거장, 정부청사역에서 2정거장." }
+      ],
+      tips: [
+        "지하철 방향: 판암 방면(정부청사 → 시청 → 탄방). 반석 방면은 반대 방향입니다.",
+        "버스 대기가 길면 방법 B(지하철)가 시간 예측이 쉬워요.",
+        "환승은 하차 태그 후 30분 이내여야 할인이 적용됩니다."
+      ] },
+    { id: "goal", icon: "i-flag", time: "12:20", start: at(12,20), title: "탄방역 1번 출구 도착",
+      place: "대전 서구 · 최종 목적지",
+      facts: [["예상 도착", "12:15~12:20"]],
+      tips: [
+        "역 안 출구 안내판에서 1번 출구를 찾아 나가세요.",
+        "약속 상대에게 도착 시각을 미리 공유해 두면 좋아요."
+      ] }
+  ];
+
+  /* ===== 저장소 (실패해도 동작) ===== */
+  const KEY = "trip-20261119-v1";
+  const load = () => { try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) { return {}; } };
+  const save = s => { try { localStorage.setItem(KEY, JSON.stringify(s)); } catch (e) {} };
+  let state = Object.assign({ done: [], memo: "", theme: "auto", open: {} }, load());
+
+  /* ===== 렌더링 ===== */
+  const $ = s => document.querySelector(s);
+  const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;" }[c]));
+  const icon = (id, style) => `<svg class="i"${style ? ` style="${style}"` : ""}><use href="#${id}"/></svg>`;
+
+  function stepHTML(s, i, cur) {
+    const done = state.done.includes(s.id);
+    const cls = done ? "done" : (i === cur ? "now" : "");
+    const badge = done ? "완료" : (i === cur ? "지금 단계" : "예정");
+    let body = "";
+    if (s.facts) body += `<div class="facts">${s.facts.map(([k, v]) => `<span class="fact">${esc(k)} <b>${esc(v)}</b></span>`).join("")}</div>`;
+    if (s.bus) body += `<div class="facts">${s.bus.map((b, j) => `<span class="busno" title="간선버스">${b}</span>${j === 0 ? '<span class="note" style="align-self:center">우선</span>' : '<span class="note" style="align-self:center">대체</span>'}`).join("")}</div>`;
+    if (s.warn) body += `<div class="warn">${esc(s.warn)}</div>`;
+    if (s.options) body += `<div class="opts">${s.options.map(o => `<div class="opt"><h4><span class="tag">방법 ${o.tag}</span>${esc(o.title)}</h4>${esc(o.text)}</div>`).join("")}</div>`;
+    if (s.maps) body += `
+      <div class="label" style="margin-top:2px">길찾기 · 신탄진역 → 탄방역 1번 출구</div>
+      <div class="maps">${MAPS.map(m => `<a class="map" href="${m.web}" target="_blank" rel="noopener"><span class="dot" style="background:${m.color}"></span>${m.name}<small>대중교통</small></a>`).join("")}</div>
+      <div class="applinks">앱으로 바로 열기: ${MAPS.filter(m => m.app).map(m => `<a href="${m.app}">${m.name} 앱</a>`).join("")}</div>`;
+    const open = state.open[s.id] ?? (i === cur);
+    body += `<details data-id="${s.id}"${open ? " open" : ""}><summary>${icon("i-info", "width:18px;height:18px;color:var(--accent)")}유의사항 ${s.tips.length}개${icon("i-chev", "width:18px;height:18px").replace('class="i"', 'class="i chev"')}</summary>
+      <ul class="tips">${s.tips.map(t => `<li>${esc(t)}</li>`).join("")}</ul></details>`;
+    body += `<button class="check" data-toggle="${s.id}" aria-pressed="${done}">${done ? icon("i-check") + "완료됨 · 취소하려면 탭" : icon("i-check") + "완료 체크"}</button>`;
+    return `<li class="step ${cls}" id="step-${s.id}">
+      <div class="node">${done ? icon("i-check") : icon(s.icon)}</div>
+      <div class="card">
+        <div class="c-head"><div><div class="c-time">${s.time}${s.id === "goal" ? "" : ""}</div><h3 class="c-title">${esc(s.title)}</h3><div class="c-place">${esc(s.place)}</div></div><span class="badge">${badge}</span></div>
+        ${body}
+      </div></li>`;
+  }
+
+  function currentIndex() {
+    const i = STEPS.findIndex(s => !state.done.includes(s.id));
+    return i === -1 ? STEPS.length : i;
+  }
+
+  function render() {
+    const cur = currentIndex();
+    $("#timeline").innerHTML = STEPS.map((s, i) => stepHTML(s, i, cur)).join("");
+    const n = state.done.length;
+    $("#doneCount").textContent = n;
+    $("#totalCount").textContent = STEPS.length;
+    $("#barFill").style.width = (n / STEPS.length * 100) + "%";
+    $("#nowStep").textContent = cur < STEPS.length ? `지금: ${STEPS[cur].title}` : "도착 완료! 수고하셨어요";
+  }
+
+  /* ===== 카운트다운 ===== */
+  const pad = n => String(n).padStart(2, "0");
+  function fmt(ms) {
+    const t = Math.max(0, Math.floor(ms / 1000));
+    const d = Math.floor(t / 86400), h = Math.floor(t % 86400 / 3600), m = Math.floor(t % 3600 / 60), s = t % 60;
+    return (d ? `${d}일 ` : "") + `${pad(h)}:${pad(m)}:${pad(s)}`;
+  }
+  function tick() {
+    const now = Date.now();
+    const dep = at(9,55), arr = at(11,40), goal = at(12,20);
+    let label, value;
+    if (state.done.length === STEPS.length) { label = "모든 단계 완료"; value = "도착 ✓"; }
+    else if (now < dep) { label = "고속버스 출발(09:55)까지"; value = fmt(dep - now); }
+    else if (now < arr) { label = "신탄진역 도착 예정(11:40)까지"; value = fmt(arr - now); }
+    else if (now < goal) { label = "탄방역 1번 출구 도착 예정까지"; value = fmt(goal - now); }
+    else { label = "예상 도착 시각(12:20) 경과"; value = "+" + fmt(now - goal); }
+    $("#cdLabel").textContent = label;
+    $("#cdTime").textContent = value;
+  }
+
+  /* ===== 복사 / 토스트 ===== */
+  let toastT;
+  function toast(msg) {
+    const el = $("#toast"); el.textContent = msg; el.classList.add("show");
+    clearTimeout(toastT); toastT = setTimeout(() => el.classList.remove("show"), 1800);
+  }
+  function copyText(text, msg, fallbackEl) {
+    const fail = () => {
+      if (fallbackEl) { const r = document.createRange(); r.selectNodeContents(fallbackEl); const sel = getSelection(); sel.removeAllRanges(); sel.addRange(r); }
+      toast("복사가 막혀 있어요. 선택된 글자를 길게 눌러 복사하세요");
+    };
+    try { navigator.clipboard.writeText(text).then(() => toast(msg), fail); } catch (e) { fail(); }
+  }
+  const SUMMARY = [
+    "[11/19(목) 고속버스]",
+    "센트럴시티(서울) 09:55 → 신탄진역 (유성복합행 경유, 약 11:40 도착)",
+    "금호고속 우등 · 승차홈 8번 · 좌석 24번 · 16,900원",
+    "예매번호 20261118-995-86-6218 (02130324)"
+  ].join("\n");
+
+  /* ===== 테마 ===== */
+  const THEMES = ["auto", "light", "dark"];
+  const THEME_ICON = { auto: "i-auto", light: "i-sun", dark: "i-moon" };
+  const THEME_NAME = { auto: "시스템 테마", light: "라이트 모드", dark: "다크 모드" };
+  let ownTheme = false;
+  function applyTheme() {
+    const r = document.documentElement;
+    if (state.theme === "auto") { if (ownTheme) r.removeAttribute("data-theme"); ownTheme = false; }
+    else { r.setAttribute("data-theme", state.theme); ownTheme = true; }
+    $("#themeBtn").innerHTML = icon(THEME_ICON[state.theme]);
+    $("#themeBtn").setAttribute("aria-label", "테마: " + THEME_NAME[state.theme]);
+  }
+
+  /* ===== 화면 켜두기 ===== */
+  let lock = null;
+  async function toggleWake() {
+    const btn = $("#wakeBtn");
+    if (lock) { try { await lock.release(); } catch (e) {} lock = null; btn.setAttribute("aria-pressed", "false"); toast("화면 켜두기 꺼짐"); return; }
+    try {
+      lock = await navigator.wakeLock.request("screen");
+      btn.setAttribute("aria-pressed", "true"); toast("화면이 꺼지지 않게 유지해요");
+      lock.addEventListener("release", () => { lock = null; btn.setAttribute("aria-pressed", "false"); });
+    } catch (e) { toast("이 브라우저에서는 화면 켜두기를 쓸 수 없어요"); }
+  }
+
+  /* ===== 이벤트 ===== */
+  document.addEventListener("click", e => {
+    const t = e.target.closest("[data-toggle]");
+    if (t) {
+      const id = t.dataset.toggle;
+      const wasDone = state.done.includes(id);
+      state.done = wasDone ? state.done.filter(x => x !== id) : [...state.done, id];
+      delete state.open[id];
+      save(state); render(); tick();
+      if (!wasDone) {
+        const nxt = STEPS[currentIndex()];
+        toast(nxt ? `다음: ${nxt.title}` : "도착 완료! 수고하셨어요");
+        if (nxt) document.getElementById("step-" + nxt.id).scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "center" });
+      }
+      return;
+    }
+    const c = e.target.closest("[data-copy]");
+    if (c) { copyText(c.dataset.copy, c.dataset.msg, $("#resNo")); return; }
+  });
+  document.addEventListener("toggle", e => {
+    const d = e.target;
+    if (d.tagName === "DETAILS" && d.dataset.id) { state.open[d.dataset.id] = d.open; save(state); }
+  }, true);
+  $("#copyAll").addEventListener("click", () => copyText(SUMMARY, "티켓 정보를 복사했어요", $("#resNo")));
+  $("#themeBtn").addEventListener("click", () => {
+    state.theme = THEMES[(THEMES.indexOf(state.theme) + 1) % THEMES.length];
+    save(state); applyTheme(); toast(THEME_NAME[state.theme]);
+  });
+  $("#wakeBtn").addEventListener("click", toggleWake);
+  const memo = $("#memo");
+  memo.value = state.memo || "";
+  memo.addEventListener("input", () => { state.memo = memo.value; save(state); });
+  $("#resetBtn").addEventListener("click", () => { $("#resetYes").hidden = false; $("#resetNo").hidden = false; });
+  $("#resetNo").addEventListener("click", () => { $("#resetYes").hidden = true; $("#resetNo").hidden = true; });
+  $("#resetYes").addEventListener("click", () => {
+    state.done = []; state.open = {}; save(state); render(); tick();
+    $("#resetYes").hidden = true; $("#resetNo").hidden = true; toast("체크를 초기화했어요");
+  });
+
+  applyTheme(); render(); tick();
+  setInterval(tick, 1000);
+})();
+</script>
+</body>
+</html>
