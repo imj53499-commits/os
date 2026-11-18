@@ -199,6 +199,7 @@ textarea{width:100%;min-height:96px;border-radius:12px;border:1px solid var(--li
     <div class="date">2026년 11월 19일 (목) · 개인 이동 일정</div>
     <h1>서울 센트럴시티 → <span>탄방역 1번 출구</span></h1>
     <div class="note">총 예상 약 2시간 20분 · 09:55 출발 → 12:15~12:20 도착</div>
+    <div class="facts" style="margin-top:6px"><span class="fact">도착 후 일정 시작 <b>13:30</b></span><span class="fact">여유 <b>약 70분</b></span></div>
   </header>
 
   <!-- 고속버스 티켓 요약 -->
@@ -322,8 +323,11 @@ textarea{width:100%;min-height:96px;border-radius:12px;border:1px solid var(--li
       ] },
     { id: "goal", icon: "i-flag", time: "12:20", start: at(12,20), title: "탄방역 1번 출구 도착",
       place: "대전 서구 · 최종 목적지",
-      facts: [["예상 도착", "12:15~12:20"]],
+      facts: [["예상 도착", "12:15~12:20"], ["일정 시작", "13:30"], ["여유", "약 70분"]],
       tips: [
+        "13:30 일정까지 약 70분 여유가 있어요. 점심을 먹거나 근처 카페에서 기다리기에 충분합니다.",
+        "고속버스가 20분 늦고 705번을 20분 기다려도 12:55쯤 도착해서 30분 이상 남아요.",
+        "신탄진역 도착이 12:40을 넘기면 버스 대기 없이 바로 오는 지하철(방법 B)을 고르세요.",
         "역 안 출구 안내판에서 1번 출구를 찾아 나가세요.",
         "약속 상대에게 도착 시각을 미리 공유해 두면 좋아요."
       ] }
@@ -389,13 +393,17 @@ textarea{width:100%;min-height:96px;border-radius:12px;border:1px solid var(--li
   }
   function tick() {
     const now = Date.now();
-    const dep = at(9,55), arr = at(11,40), goal = at(12,20);
+    const dep = at(9,55), arr = at(11,40), goal = at(12,20), meet = at(13,30);
     let label, value;
-    if (state.done.length === STEPS.length) { label = "모든 단계 완료"; value = "도착 ✓"; }
+    if (state.done.length === STEPS.length) {
+      if (now < meet) { label = "도착 완료 · 일정 시작(13:30)까지"; value = fmt(meet - now); }
+      else { label = "모든 단계 완료"; value = "도착 ✓"; }
+    }
     else if (now < dep) { label = "고속버스 출발(09:55)까지"; value = fmt(dep - now); }
     else if (now < arr) { label = "신탄진역 도착 예정(11:40)까지"; value = fmt(arr - now); }
     else if (now < goal) { label = "탄방역 1번 출구 도착 예정까지"; value = fmt(goal - now); }
-    else { label = "예상 도착 시각(12:20) 경과"; value = "+" + fmt(now - goal); }
+    else if (now < meet) { label = "13:30 일정까지 남은 시간"; value = fmt(meet - now); }
+    else { label = "일정 시작 시각(13:30) 경과"; value = "+" + fmt(now - meet); }
     $("#cdLabel").textContent = label;
     $("#cdTime").textContent = value;
   }
