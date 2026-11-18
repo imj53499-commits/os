@@ -198,7 +198,7 @@ textarea{width:100%;min-height:96px;border-radius:12px;border:1px solid var(--li
   <header class="head">
     <div class="date">2026년 11월 19일 (목) · 개인 이동 일정</div>
     <h1>서울 센트럴시티 → <span>탄방역 1번 출구</span></h1>
-    <div class="note">총 예상 약 2시간 20분 · 13:30 출발 → 15:50 전후 도착</div>
+    <div class="note">총 예상 약 2시간 20분 · 11:45 출발 → 13:30 신탄진 → 14:05 전후 탄방역</div>
   </header>
 
   <!-- 고속버스 티켓 요약 -->
@@ -207,16 +207,16 @@ textarea{width:100%;min-height:96px;border-radius:12px;border:1px solid var(--li
       <span><b>금호고속</b> · 우등(일반)</span>
       <span class="chip"><svg class="i" style="width:14px;height:14px"><use href="#i-bus"/></svg>1구간 고속버스</span>
     </div>
-    <div class="warn" style="margin:12px 18px 0">기존 예매표는 <b>09:55 출발</b>이에요. 13:30 버스로 바꾸면 승차홈·좌석·예매번호가 달라지니 새 표 기준으로 확인하세요.</div>
+    <div class="warn" style="margin:12px 18px 0">기존 예매표는 <b>09:55 출발(11:40 신탄진 도착)</b>이에요. 13:30에 신탄진에 도착하려면 11:45쯤 출발하는 버스로 바꿔야 하고, 승차홈·좌석·예매번호도 달라질 수 있어요.</div>
     <div class="t-big">
       <div><span class="k">승차홈</span><span class="v sign">8</span><span class="k">번</span></div>
       <div><span class="k">좌석</span><span class="v">24</span><span class="k">번</span></div>
-      <div><span class="k">출발</span><span class="v" style="font-size:32px;padding-block:4px">13:30</span><span class="k">11.19 (목)</span></div>
+      <div><span class="k">출발</span><span class="v" style="font-size:32px;padding-block:4px">11:45</span><span class="k">11.19 (목)</span></div>
     </div>
     <div class="t-route">
       <div>센트럴시티<small>서울</small></div>
       <div class="arrow" aria-hidden="true"></div>
-      <div style="text-align:right">신탄진역<small>유성복합행 경유 · 약 15:15</small></div>
+      <div style="text-align:right">신탄진역<small>유성복합행 경유 · 약 13:30</small></div>
     </div>
     <div class="t-code">
       <div class="txt">
@@ -282,26 +282,26 @@ textarea{width:100%;min-height:96px;border-radius:12px;border:1px solid var(--li
   ];
 
   const STEPS = [
-    { id: "board", icon: "i-bus", time: "13:30", start: at(13,30), title: "고속버스 탑승",
+    { id: "board", icon: "i-bus", time: "11:45", start: at(11,45), title: "고속버스 탑승",
       place: "센트럴시티(서울) · 승차홈 8번",
       facts: [["좌석", "24번"], ["승차홈", "8번"], ["금호고속", "우등"]],
       tips: [
         "센트럴시티는 호남선 터미널입니다. 경부선(서울고속버스터미널) 건물과 다르니 입구를 확인하세요.",
-        "출발 10~15분 전(13:15쯤)까지 8번 승차홈에 도착하면 여유 있어요.",
+        "출발 10~15분 전(11:30쯤)까지 8번 승차홈에 도착하면 여유 있어요.",
         "모바일 승차권 또는 예매번호를 바로 열 수 있게 준비하세요. 시간을 바꿨다면 새 표인지 확인하세요.",
         "점심은 출발 전에 해결하세요. 탑승 중 1시간 45분 동안 식사하기 어려워요.",
         "탑승 전 화장실, 물 챙기기. 휴게소 정차가 없을 수 있어요."
       ] },
-    { id: "arrive", icon: "i-pin", time: "15:15", start: at(15,15), title: "신탄진역 도착 · 하차",
+    { id: "arrive", icon: "i-pin", time: "13:30", start: at(13,30), title: "신탄진역 도착 · 하차",
       place: "유성복합행 경유 · 예상 소요 1시간 45분",
-      facts: [["예상 도착", "15:15"]],
+      facts: [["예상 도착", "13:30"]],
       warn: "종점(유성복합)까지 가지 않고 신탄진에서 내립니다. 정차 안내방송을 꼭 들으세요.",
       tips: [
         "도로 상황에 따라 10~20분 늦어질 수 있어요. 이후 일정은 실제 도착 시각 기준으로 계산하세요.",
         "내리기 전 좌석 24번 주변 소지품을 확인하세요.",
         "하차하면 바로 지도 앱으로 705번 실시간 도착 정보를 확인하세요."
       ] },
-    { id: "citybus", icon: "i-swap", time: "15:20", start: at(15,20), title: "시내버스 환승 · 705번",
+    { id: "citybus", icon: "i-swap", time: "13:35", start: at(13,35), title: "시내버스 환승 · 705번",
       place: "신탄진역 정류장 → 둔산동 방면",
       bus: ["705", "703"],
       maps: true,
@@ -311,7 +311,7 @@ textarea{width:100%;min-height:96px;border-radius:12px;border:1px solid var(--li
         "교통카드로 탑승하고 내릴 때도 꼭 태그하세요. 하차 태그를 해야 지하철·버스 환승할인이 적용됩니다.",
         "정부청사서문, 이마트, 시청환승지 같은 정류장 이름을 기억해 두면 하차 시점을 놓치지 않아요."
       ] },
-    { id: "transfer", icon: "i-train", time: "15:40", start: at(15,40), title: "둔산 하차 → 탄방역으로 이동",
+    { id: "transfer", icon: "i-train", time: "13:55", start: at(13,55), title: "둔산 하차 → 탄방역으로 이동",
       place: "정부청사서문 · 이마트 · 시청환승지 일대에서 하차",
       options: [
         { tag: "A", title: "시내버스 환승", text: "같은 정류장 일대에서 탄방역 방면 시내버스로 환승해 탄방역 정류장 하차." },
@@ -322,12 +322,12 @@ textarea{width:100%;min-height:96px;border-radius:12px;border:1px solid var(--li
         "버스 대기가 길면 방법 B(지하철)가 시간 예측이 쉬워요.",
         "환승은 하차 태그 후 30분 이내여야 할인이 적용됩니다."
       ] },
-    { id: "goal", icon: "i-flag", time: "15:50", start: at(15,50), title: "탄방역 1번 출구 도착",
+    { id: "goal", icon: "i-flag", time: "14:05", start: at(14,5), title: "탄방역 1번 출구 도착",
       place: "대전 서구 · 최종 목적지",
-      facts: [["예상 도착", "15:50 전후"]],
+      facts: [["신탄진 출발", "13:35"], ["예상 도착", "14:05 전후"]],
       tips: [
-        "고속버스가 20분 늦고 705번을 20분 기다리면 16:30쯤 도착할 수 있어요.",
-        "16시 이후 둔산 일대는 퇴근 전 차량이 늘기 시작해요. 버스가 막히면 지하철(방법 B)이 시간 예측이 쉬워요.",
+        "신탄진에서 탄방역까지는 약 34분이지만, 705번을 15~20분 기다리면 14:20~14:25쯤 도착할 수 있어요.",
+        "둔산에서 버스 환승 대기가 길면 지하철(방법 B)이 시간 예측이 쉬워요.",
         "역 안 출구 안내판에서 1번 출구를 찾아 나가세요.",
         "약속 상대에게 도착 시각을 미리 공유해 두면 좋아요."
       ] }
@@ -393,13 +393,13 @@ textarea{width:100%;min-height:96px;border-radius:12px;border:1px solid var(--li
   }
   function tick() {
     const now = Date.now();
-    const dep = at(13,30), arr = at(15,15), goal = at(15,50);
+    const dep = at(11,45), arr = at(13,30), goal = at(14,5);
     let label, value;
     if (state.done.length === STEPS.length) { label = "모든 단계 완료"; value = "도착 ✓"; }
-    else if (now < dep) { label = "고속버스 출발(13:30)까지"; value = fmt(dep - now); }
-    else if (now < arr) { label = "신탄진역 도착 예정(15:15)까지"; value = fmt(arr - now); }
-    else if (now < goal) { label = "탄방역 1번 출구 도착 예정(15:50)까지"; value = fmt(goal - now); }
-    else { label = "예상 도착 시각(15:50) 경과"; value = "+" + fmt(now - goal); }
+    else if (now < dep) { label = "고속버스 출발(11:45)까지"; value = fmt(dep - now); }
+    else if (now < arr) { label = "신탄진역 도착(13:30)까지"; value = fmt(arr - now); }
+    else if (now < goal) { label = "탄방역 1번 출구 도착 예정(14:05)까지"; value = fmt(goal - now); }
+    else { label = "예상 도착 시각(14:05) 경과"; value = "+" + fmt(now - goal); }
     $("#cdLabel").textContent = label;
     $("#cdTime").textContent = value;
   }
@@ -419,7 +419,7 @@ textarea{width:100%;min-height:96px;border-radius:12px;border:1px solid var(--li
   }
   const SUMMARY = [
     "[11/19(목) 고속버스]",
-    "센트럴시티(서울) 13:30 → 신탄진역 (유성복합행 경유, 약 15:15 도착)",
+    "센트럴시티(서울) 11:45쯤 → 신탄진역 13:30 도착 (유성복합행 경유)",
     "※ 기존 예매: 09:55 출발표",
     "금호고속 우등 · 승차홈 8번 · 좌석 24번 · 16,900원",
     "예매번호 20261118-995-86-6218 (02130324)"
